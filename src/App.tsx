@@ -1,31 +1,48 @@
-import React  from 'react';
+import React, {useState} from 'react';
 import './App.css';
-import TodoList from "./TodoList";
+import TodoList, {TaskType} from "./TodoList";
+import {FilterType} from "./CommonTypes/FilterType";
 import {AdditionalTaskTodoListApp1} from "./AdditionalTasksTodoList/AdditionalTaskTodoListApp1";
+
 
 
 function App() {
     // const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const tasks1 = [
+    const initialState = [
         {id: 1, title: "SocialNetwork", isDone: false},
         {id: 2, title: "TodoList", isDone: false},
-        {id: 2, title: "MicroTask", isDone: true},
+        {id: 3, title: "MicroTask", isDone: true},
     ]
-    const tasks2 = [
-        {id: 1, title: "CodeWards", isDone: false},
-        {id: 2, title: "Video Content", isDone: false},
-        {id: 2, title: "HomeWork", isDone: false},
-    ]
+    const [tasks, setTasks] = useState<Array<TaskType>>(initialState);
+    const [filterValue, setFilter] = useState<FilterType>(FilterType.All)
+
+    function handleDeleteTask(id: number) {
+        setTasks(tasks.filter(task => task.id !== id))
+    }
+
+    function handleFilterTasks(filterValue: FilterType) {
+        setFilter(filterValue)
+    }
+    let tasksForTodoList = tasks;
+    if (filterValue === "active") {
+        tasksForTodoList = tasks.filter(task => task.isDone === false)
+    }
+    if (filterValue === "completed") {
+        tasksForTodoList = tasks.filter(task => task.isDone === true)
+    }
+
+
     return (
         <div className="App">
-            {/*{days.map(day => <TodoList title={day}/>)}*/}
+            <TodoList title={"Monday"}
+                      tasks={tasksForTodoList}
+                      onDeleteTask={handleDeleteTask}
+                      onFilterTasks={handleFilterTasks}/>
 
-            {/*<TodoList title={"Monday"} task={tasks1}/>*/}
-            {/*<TodoList title={"Tuesday"} task={tasks2}/>*/}
-
-            <AdditionalTaskTodoListApp1/>
+            {/*<AdditionalTaskTodoListApp1/>*/}
         </div>
     );
 }
 
 export default App;
+// +WTB DRAGONSKULL куски и рецепт(key, recipe)
