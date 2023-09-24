@@ -6,7 +6,7 @@ import {v1} from "uuid";
 
 
 function App() {
-    // const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
     const initialState = [
         {id: v1(), title: "SocialNetwork", isDone: false},
         {id: v1(), title: "TodoList", isDone: false},
@@ -20,15 +20,23 @@ function App() {
     }
 
     function onAddTaskItem(taskItem: string) {
-        const newTaskItem = {id: v1(), title: taskItem, isDone: false};
+        const newTaskItem = {id: v1(), title: taskItem, isDone: false}
         setTasks([newTaskItem, ...tasks])
+    }
+
+    function onCheckTaskItem(id: string, isDone: boolean) {
+        const checkedTask = tasks.find(t => t.id === id)
+        if (!checkedTask) return
+        checkedTask.isDone = isDone
+        setTasks([...tasks])
     }
 
     function onFilterTasks(filterValue: FilterType) {
         setFilter(filterValue)
     }
 
-    let tasksForTodoList = tasks;
+
+    let tasksForTodoList = tasks
     if (filterValue === "active") {
         tasksForTodoList = tasks.filter(task => !task.isDone)
     }
@@ -43,7 +51,10 @@ function App() {
                       tasks={tasksForTodoList}
                       onDeleteTaskItem={onDeleteTaskItem}
                       onFilterTasks={onFilterTasks}
-                      onAddTaskItem={onAddTaskItem}/>
+                      onAddTaskItem={onAddTaskItem}
+                      onCheckTaskItem={onCheckTaskItem}
+                      filterValue = {filterValue}
+            />
 
         </div>
     );
