@@ -50,6 +50,7 @@ import {v1} from 'uuid';
 export type FilterValuesType = "all" | "active" | "completed";
 
 function App() {
+    let [filter, setFilter] = useState<FilterValuesType>("all");
 
     let [tasks, setTasks] = useState([
         {id: v1(), title: "HTML&CSS", isDone: true},
@@ -70,16 +71,19 @@ function App() {
         setTasks(newTasks);
     }
 
-    let [filter, setFilter] = useState<FilterValuesType>("all");
-
-    let tasksForTodolist = tasks;
-
-    if (filter === "active") {
-        tasksForTodolist = tasks.filter(t => !t.isDone);
+    const filteredTasks = (filterValue: string) => {
+        let tasksForTodolist = tasks;
+        switch (filterValue) {
+            case "active":
+                return tasksForTodolist = tasks.filter(t => !t.isDone);
+            case "completed":
+                return tasksForTodolist = tasks.filter(t => t.isDone);
+            default:
+                return tasksForTodolist;
+        }
     }
-    if (filter === "completed") {
-        tasksForTodolist = tasks.filter(t => t.isDone);
-    }
+
+    const tasksForTodolist = filteredTasks(filter)
 
     function changeFilter(value: FilterValuesType) {
         setFilter(value);
@@ -93,7 +97,7 @@ function App() {
                       removeTask={removeTask}
                       changeFilter={changeFilter}
                       addTask={addTask}>
-               <p>Story of the day: tratataa</p>
+                <p>Story of the day: tratataa</p>
             </Todolist>
         </div>
     );
