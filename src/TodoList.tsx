@@ -9,13 +9,15 @@ export type TaskType = {
 }
 
 type TodoListPropsType = {
+    id: string
     title: string
     tasks: Array<TaskType>
-    filterValue: string
-    onDeleteTaskItem: (id: string) => void
-    onFilterTasks: (value: FilterType) => void
-    onAddTaskItem: (taskItem: string) => void
-    onCheckTaskItem: (id: string, isDone: boolean) => void
+    filterValue: FilterType
+    onDeleteTaskItem: (id: string, todoListId: string) => void
+    onFilterTasks: (value: FilterType, id: string) => void
+    onAddTaskItem: (taskItem: string, todoListId: string) => void
+    onCheckTaskItem: (id: string, isDone: boolean, todoListId: string) => void
+    onDeleteTodolist: (id: string) => void
 }
 
 const TodoList: FC<TodoListPropsType> = (props) => {
@@ -32,7 +34,7 @@ const TodoList: FC<TodoListPropsType> = (props) => {
             return
         }
 
-        props.onAddTaskItem(taskItem.trim())
+        props.onAddTaskItem(taskItem.trim(), props.id)
         setTaskItem("")
         setError(null)
     }
@@ -43,20 +45,23 @@ const TodoList: FC<TodoListPropsType> = (props) => {
     }
 
     function handleTaskFilterAll() {
-        props.onFilterTasks(FilterType.All)
+        props.onFilterTasks(FilterType.All, props.id)
     }
 
     function handleTaskFilterActive() {
-        props.onFilterTasks(FilterType.Active)
+        props.onFilterTasks(FilterType.Active, props.id)
     }
 
     function handleTaskFilterCompleted() {
-        props.onFilterTasks(FilterType.Completed)
+        props.onFilterTasks(FilterType.Completed, props.id)
+    }
+    function handlerDeleteTodolist() {
+        props.onDeleteTodolist(props.id)
     }
 
     const tasksItems = props.tasks.map(task => {
-            const onDeleteTaskItem = () => props.onDeleteTaskItem(task.id)
-            const onCheckTaskItem = (e: ChangeEvent<HTMLInputElement>) => props.onCheckTaskItem(task.id, e.currentTarget.checked)
+            const onDeleteTaskItem = () => props.onDeleteTaskItem(task.id, props.id)
+            const onCheckTaskItem = (e: ChangeEvent<HTMLInputElement>) => props.onCheckTaskItem(task.id, e.currentTarget.checked, props.id)
             return (
                 <li key={task.id}>
                     <input onChange={onCheckTaskItem} type="checkbox" checked={task.isDone}/>
@@ -70,7 +75,7 @@ const TodoList: FC<TodoListPropsType> = (props) => {
 
     return (
         <div>
-            <h3>{props.title}</h3>
+            <h3>{props.title}<button onClick={handlerDeleteTodolist}>&otimes;</button></h3>
             <div>
                 <input value={taskItem}
                        onChange={handleTaskListInput}
