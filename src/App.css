@@ -1,28 +1,14 @@
-.App {
-  padding: 30px;
-  display: flex;
-}
-
-.App > div {
-  margin-right: 50px;
+*, *::after, *::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 
-.error {
-  border: red 1px solid;
+body {
+  padding: 1%;
 }
 
-.error-message {
-  color: red;
-}
-
-
-
-.error::placeholder {
-  color: red;
-  opacity: .5;
-}
-
-.active-filter {
-  background-color: aquamarine;
+.todolist {
+  padding: 8px 16px;
 }

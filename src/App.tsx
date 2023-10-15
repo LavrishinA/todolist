@@ -4,6 +4,7 @@ import TodoList, {TaskType} from "./TodoList";
 import {FilterType} from "./CommonTypes/FilterType";
 import {v1} from "uuid";
 import {AddItemForm} from "./AddItemForm";
+import {Grid, Paper} from "@mui/material";
 
 
 type TodoListType = {
@@ -21,8 +22,8 @@ const todolist2 = v1();
 function App() {
 
     const [todolists, setTodolists] = useState<Array<TodoListType>>([
-        {id: todolist1, listTitle: "What to learn", filter: FilterType.Completed},
-        {id: todolist2, listTitle: "What to buy", filter: FilterType.Active}
+        {id: todolist1, listTitle: "What to learn", filter: FilterType.All},
+        {id: todolist2, listTitle: "What to buy", filter: FilterType.All}
     ])
 
     const [tasksObj, setTasksObj] = useState<TasksObjType>({
@@ -49,7 +50,6 @@ function App() {
     }
 
 
-
     function onAddTaskItem(taskItem: string, todoListId: string) {
         const newTaskItem = {id: v1(), title: taskItem, isDone: false};
         setTasksObj({...tasksObj, [todoListId]: [newTaskItem, ...tasksObj[todoListId]]})
@@ -60,7 +60,7 @@ function App() {
     }
 
     function onCheckTaskItem(id: string, isDone: boolean, todoListId: string) {
-        setTasksObj({...tasksObj, [todoListId]:  tasksObj[todoListId].map(task => task.id === id ? {...task, isDone}: task)})
+        setTasksObj({...tasksObj, [todoListId]: tasksObj[todoListId].map(task => task.id === id ? {...task, isDone} : task)})
         // const tasks = tasksObj[todoListId];
         // const checkedTask = tasks.find(t => t.id === id)
         // if (!checkedTask) return
@@ -103,34 +103,40 @@ function App() {
 
 
     return (
-        <div className="App">
-            <AddItemForm onAddItem={onAddTodoList}/>
-            {
-                todolists.map(tl => {
-
-                    let tasksForTodoList = tasksObj[tl.id]
-                    if (tl.filter === "active") {
-                        tasksForTodoList = tasksForTodoList.filter(task => !task.isDone)
-                    }
-                    if (tl.filter === "completed") {
-                        tasksForTodoList = tasksForTodoList.filter(task => task.isDone)
-                    }
-
-                    return <TodoList key={tl.id}
-                                     id={tl.id}
-                                     title={tl.listTitle}
-                                     filterValue={tl.filter}
-                                     tasks={tasksForTodoList}
-                                     onDeleteTaskItem={onDeleteTaskItem}
-                                     onFilterTasks={onFilterTasks}
-                                     onChangeTaskTitle={onChangeTaskTitle}
-                                     onAddTaskItem={onAddTaskItem}
-                                     onCheckTaskItem={onCheckTaskItem}
-                                     onDeleteTodolist={onDeleteTodolist}
-                    />
-                })
-            }
-        </div>
+        <Grid container className="App">
+            <Grid item xs={2}>
+                <AddItemForm onAddItem={onAddTodoList}/>
+            </Grid>
+            <Grid item container spacing={2} xs={10}>
+                {
+                    todolists.map(tl => {
+                        let tasksForTodoList = tasksObj[tl.id]
+                        if (tl.filter === "active") {
+                            tasksForTodoList = tasksForTodoList.filter(task => !task.isDone)
+                        }
+                        if (tl.filter === "completed") {
+                            tasksForTodoList = tasksForTodoList.filter(task => task.isDone)
+                        }
+                        return (
+                            <Grid item>
+                                <Paper elevation={3} className="todolist">
+                                    <TodoList key={tl.id}
+                                              id={tl.id}
+                                              title={tl.listTitle}
+                                              filterValue={tl.filter}
+                                              tasks={tasksForTodoList}
+                                              onDeleteTaskItem={onDeleteTaskItem}
+                                              onFilterTasks={onFilterTasks}
+                                              onChangeTaskTitle={onChangeTaskTitle}
+                                              onAddTaskItem={onAddTaskItem}
+                                              onCheckTaskItem={onCheckTaskItem}
+                                              onDeleteTodolist={onDeleteTodolist}/>
+                                </Paper>
+                            </Grid>)
+                    })
+                }
+            </Grid>
+        </Grid>
     )
 }
 

@@ -2,8 +2,9 @@ import React, {ChangeEvent, FC} from "react";
 import {FilterType} from "./CommonTypes/FilterType";
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
-import {log} from "util";
-
+import {Box, Checkbox, Divider, IconButton, Paper, ToggleButton, ToggleButtonGroup} from "@mui/material";
+import {DeleteForever} from '@mui/icons-material';
+import {pink} from "@mui/material/colors";
 
 export type TaskType = {
     id: string
@@ -53,10 +54,19 @@ const TodoList: FC<TodoListPropsType> = (props) => {
             const onChangeTitleTaskItem = (title: string) => props.onChangeTaskTitle(task.id, title, props.id)
 
             return (
+
                 <li key={task.id}>
-                    <input onChange={onCheckTaskItem} type="checkbox" checked={task.isDone}/>
+                    <Checkbox onChange={onCheckTaskItem} size="small" checked={task.isDone} sx={{
+                        color: pink[800],
+                        '&.Mui-checked': {
+                            color: pink[600],
+                        },
+                    }}/>
                     <EditableSpan title={task.title} onChangeTitleTaskItem={onChangeTitleTaskItem}/>
-                    <button onClick={onDeleteTaskItem}>&otimes;</button>
+                    <IconButton aria-label="delete" size="small" color="primary" onClick={onDeleteTaskItem}>
+                        <DeleteForever fontSize="inherit"/>
+                    </IconButton>
+                    <Divider/>
                 </li>
             )
         }
@@ -64,24 +74,29 @@ const TodoList: FC<TodoListPropsType> = (props) => {
 
 
     return (
-        <div>
+        <>
             <h3>{props.title}
-                <button onClick={handlerDeleteTodolist}>&otimes;</button>
+                <IconButton aria-label="delete" size="small" color="primary" onClick={handlerDeleteTodolist}>
+                    <DeleteForever fontSize="inherit"/>
+                </IconButton>
             </h3>
             <AddItemForm onAddItem={handleAddTask}/>
             <ul>{tasksItems}</ul>
             <div>
-                <button className={props.filterValue === FilterType.All ? "active-filter" : ""}
-                        onClick={handleTaskFilterAll}>All
-                </button>
-                <button className={props.filterValue === FilterType.Active ? "active-filter" : ""}
-                        onClick={handleTaskFilterActive}>Active
-                </button>
-                <button className={props.filterValue === FilterType.Completed ? "active-filter" : ""}
-                        onClick={handleTaskFilterCompleted}>Completed
-                </button>
+                <ToggleButtonGroup
+                    color="primary"
+                    size="small"
+                    value={props.filterValue}
+                    exclusive
+                    aria-label="Platform"
+                >
+                    <ToggleButton onClick={handleTaskFilterAll} value={FilterType.All}>All</ToggleButton>
+                    <ToggleButton onClick={handleTaskFilterActive} value={FilterType.Active}>Active</ToggleButton>
+                    <ToggleButton onClick={handleTaskFilterCompleted}
+                                  value={FilterType.Completed}>Completed</ToggleButton>
+                </ToggleButtonGroup>
             </div>
-        </div>
+        </>
     );
 };
 

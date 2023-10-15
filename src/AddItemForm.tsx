@@ -1,10 +1,12 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
+import {IconButton, TextField} from "@mui/material";
+import {PlaylistAddSharp} from '@mui/icons-material/';
 
-type AddItemFormPropsType =  {
+type AddItemFormPropsType = {
     onAddItem: (title: string) => void
 }
 
-export const AddItemForm: React.FC< AddItemFormPropsType> = ({onAddItem}) => {
+export const AddItemForm: React.FC<AddItemFormPropsType> = ({onAddItem}) => {
 
     const [itemTitle, setItemTitle] = useState("")
     const [error, setError] = useState<null | string>(null)
@@ -33,13 +35,22 @@ export const AddItemForm: React.FC< AddItemFormPropsType> = ({onAddItem}) => {
 
     return (
         <div>
-            <input value={itemTitle}
-                   onChange={handleTaskListInput}
-                   onKeyDown={handleAddTaskItemOnPressEnter}
-                   className={error ? "error" : ""}/>
+            <TextField
+                id="outlined-error-helper-text"
+                value={itemTitle}
+                label="Enter title"
+                size="small"
+                helperText={error}
+                error={!!error}
+                onChange={handleTaskListInput}
+                onKeyDown={handleAddTaskItemOnPressEnter}
+                autoComplete="off"
+            />
 
-            <button onClick={handleAddTaskItem}>+</button>
-            {error && <div className="error-message">{error}</div>}
+            <IconButton aria-label="add" size="small" color="primary" onClick={handleAddTaskItem}>
+                <PlaylistAddSharp fontSize="medium"/>
+            </IconButton>
+
         </div>
     );
 };
