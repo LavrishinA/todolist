@@ -22,8 +22,8 @@ type TodoListPropsType = {
     tasks: Array<TaskType>
     filterValue: FilterType
     onDeleteTaskItem: (id: string, todoListId: string) => void
-    onFilterTasks: (value: FilterType, id: string) => void
-    onAddTaskItem: (taskItem: string, todoListId: string) => void
+    onFilterTasks: (id: string, value: FilterType ) => void
+    onAddTaskItem: (taskTitle: string, todoListId: string) => void
     onCheckTaskItem: (id: string, isDone: boolean, todoListId: string) => void
     onChangeTaskTitle: (id: string, title: string, todoListId: string) => void
     onDeleteTodolist: (id: string) => void
@@ -32,15 +32,15 @@ type TodoListPropsType = {
 const TodoList: FC<TodoListPropsType> = (props) => {
 
     function handleTaskFilterAll() {
-        props.onFilterTasks(FilterType.All, props.id)
+        props.onFilterTasks(props.id, FilterType.All)
     }
 
     function handleTaskFilterActive() {
-        props.onFilterTasks(FilterType.Active, props.id)
+        props.onFilterTasks(props.id, FilterType.Active)
     }
 
     function handleTaskFilterCompleted() {
-        props.onFilterTasks(FilterType.Completed, props.id)
+        props.onFilterTasks(props.id, FilterType.Completed)
     }
 
     function handlerDeleteTodolist() {
@@ -52,6 +52,8 @@ const TodoList: FC<TodoListPropsType> = (props) => {
     }
 
     const onChangeTitleTaskItem = (taskID: string, title: string) => props.onChangeTaskTitle(taskID, title, props.id)
+
+
     const tasksItems = props.tasks.map(task => {
             const onDeleteTaskItem = () => props.onDeleteTaskItem(task.id, props.id)
             const onCheckTaskItem = (e: ChangeEvent<HTMLInputElement>) => props.onCheckTaskItem(task.id, e.currentTarget.checked, props.id)

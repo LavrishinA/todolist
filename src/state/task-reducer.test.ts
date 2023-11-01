@@ -56,6 +56,7 @@ test("Task name should be changed", () => {
 })
 
 test("New array shoul be added when new todolist is added", () => {
+    debugger
     const todolists = [
         {id: "todolist1", listTitle: "What to learn", filter: FilterType.All},
         {id: "todolist2", listTitle: "What to buy", filter: FilterType.All}

@@ -29,8 +29,9 @@ type Actions = AddTl | RemoveTl | UpdateTltitle | UpdateTlfilter
 export function todolistsReducer(todolists: TodoListType[], action: Actions): TodoListType[] {
     switch (action.type) {
         case "addtl":
-            return [...todolists,
+            return [
                 {id: action.id, listTitle: action.listTitle, filter: FilterType.All},
+                ...todolists
             ]
         case "removetl":
             return todolists.filter(tl => tl.id !== action.id)
@@ -51,7 +52,8 @@ export function removeTl(id: string): RemoveTl {
 }
 
 export function addTl(listTitle: string): AddTl {
-    return {type: "addtl", listTitle, id: v1()} as const
+    const id = v1()
+    return {type: "addtl", listTitle, id} as const
 }
 
 export function updateTl(id: string, listTitle: string): UpdateTltitle {

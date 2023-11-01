@@ -1,6 +1,6 @@
 import {TasksObjType} from "../App";
 import {v1} from "uuid";
-import {AddTl} from "./todolist-reducer";
+import {AddTl, RemoveTl} from "./todolist-reducer";
 
 
 export function tasksReducer(task: TasksObjType, action: Actions): TasksObjType {
@@ -27,7 +27,10 @@ export function tasksReducer(task: TasksObjType, action: Actions): TasksObjType 
                 [action.payload.todoListId]: task[action.payload.todoListId].map(t => t.id === action.payload.taskId ? {...t, title: action.payload.title} : t )
             }
         case "addtl":
-            return { ...task, [ action.id]: []}
+            return { ...task, [action.id]: []}
+        case "removetl":
+            delete task[action.id]
+            return {...task}
         default:
             throw new Error("Unknown action type")
     }
@@ -37,7 +40,7 @@ type DeleteTask = ReturnType<typeof deleteTask>
 type AddTask = ReturnType<typeof addTask>
 type changeTaskStatus = ReturnType<typeof changeTaskStatus>
 type changeTaskTitle = ReturnType<typeof changeTaskTitle>
-type Actions = DeleteTask | AddTask | changeTaskStatus | changeTaskTitle | AddTl
+type Actions = DeleteTask | AddTask | changeTaskStatus | changeTaskTitle | AddTl | RemoveTl
 
 export const deleteTask = (id: string, todoListId: string) => {
     return {
