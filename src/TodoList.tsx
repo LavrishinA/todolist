@@ -2,9 +2,13 @@ import React, {ChangeEvent, FC} from "react";
 import {FilterType} from "./CommonTypes/FilterType";
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
-import {Box, Checkbox, Divider, IconButton, Paper, ToggleButton, ToggleButtonGroup} from "@mui/material";
-import {DeleteForever} from '@mui/icons-material';
+import Checkbox from "@mui/material/Checkbox";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import DeleteForever from '@mui/icons-material/DeleteForever';
 import {pink} from "@mui/material/colors";
+import ToggleButton from "@mui/material/ToggleButton/ToggleButton";
 
 export type TaskType = {
     id: string
@@ -47,11 +51,10 @@ const TodoList: FC<TodoListPropsType> = (props) => {
         props.onAddTaskItem(title, props.id)
     }
 
-
+    const onChangeTitleTaskItem = (taskID: string, title: string) => props.onChangeTaskTitle(taskID, title, props.id)
     const tasksItems = props.tasks.map(task => {
             const onDeleteTaskItem = () => props.onDeleteTaskItem(task.id, props.id)
             const onCheckTaskItem = (e: ChangeEvent<HTMLInputElement>) => props.onCheckTaskItem(task.id, e.currentTarget.checked, props.id)
-            const onChangeTitleTaskItem = (title: string) => props.onChangeTaskTitle(task.id, title, props.id)
 
             return (
 
@@ -62,7 +65,7 @@ const TodoList: FC<TodoListPropsType> = (props) => {
                             color: pink[600],
                         },
                     }}/>
-                    <EditableSpan title={task.title} onChangeTitleTaskItem={onChangeTitleTaskItem}/>
+                    <EditableSpan title={task.title} onChangeTitleTaskItem={(title) => onChangeTitleTaskItem(task.id, title)}/>
                     <IconButton aria-label="delete" size="small" color="primary" onClick={onDeleteTaskItem}>
                         <DeleteForever fontSize="inherit"/>
                     </IconButton>
@@ -71,7 +74,6 @@ const TodoList: FC<TodoListPropsType> = (props) => {
             )
         }
     )
-
 
     return (
         <>

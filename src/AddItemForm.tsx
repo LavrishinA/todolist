@@ -1,6 +1,7 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
-import {IconButton, TextField} from "@mui/material";
-import {PlaylistAddSharp} from '@mui/icons-material/';
+import IconButton from "@mui/material/IconButton";
+import  TextField from "@mui/material/TextField";
+import PlaylistAddSharp from '@mui/icons-material/PlaylistAddSharp';
 
 type AddItemFormPropsType = {
     onAddItem: (title: string) => void

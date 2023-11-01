@@ -4,16 +4,15 @@ import TodoList, {TaskType} from "./TodoList";
 import {FilterType} from "./CommonTypes/FilterType";
 import {v1} from "uuid";
 import {AddItemForm} from "./AddItemForm";
-import {Grid, Paper} from "@mui/material";
+import Paper from "@mui/material/Paper";
 
-
-type TodoListType = {
+export type TodoListType = {
     id: string
     listTitle: string
     filter: FilterType
 }
 
-type TasksObjType = {
+export type TasksObjType = {
     [key: string]: Array<TaskType>
 }
 const todolist1 = v1();
@@ -60,7 +59,10 @@ function App() {
     }
 
     function onCheckTaskItem(id: string, isDone: boolean, todoListId: string) {
-        setTasksObj({...tasksObj, [todoListId]: tasksObj[todoListId].map(task => task.id === id ? {...task, isDone} : task)})
+        setTasksObj({
+            ...tasksObj,
+            [todoListId]: tasksObj[todoListId].map(task => task.id === id ? {...task, isDone} : task)
+        })
         // const tasks = tasksObj[todoListId];
         // const checkedTask = tasks.find(t => t.id === id)
         // if (!checkedTask) return
@@ -103,11 +105,11 @@ function App() {
 
 
     return (
-        <Grid container className="App">
-            <Grid item xs={2}>
-                <AddItemForm onAddItem={onAddTodoList}/>
-            </Grid>
-            <Grid item container spacing={2} xs={10}>
+        <main className="App">
+
+            <AddItemForm onAddItem={onAddTodoList}/>
+
+            <div>
                 {
                     todolists.map(tl => {
                         let tasksForTodoList = tasksObj[tl.id]
@@ -118,25 +120,24 @@ function App() {
                             tasksForTodoList = tasksForTodoList.filter(task => task.isDone)
                         }
                         return (
-                            <Grid item>
-                                <Paper elevation={3} className="todolist">
-                                    <TodoList key={tl.id}
-                                              id={tl.id}
-                                              title={tl.listTitle}
-                                              filterValue={tl.filter}
-                                              tasks={tasksForTodoList}
-                                              onDeleteTaskItem={onDeleteTaskItem}
-                                              onFilterTasks={onFilterTasks}
-                                              onChangeTaskTitle={onChangeTaskTitle}
-                                              onAddTaskItem={onAddTaskItem}
-                                              onCheckTaskItem={onCheckTaskItem}
-                                              onDeleteTodolist={onDeleteTodolist}/>
-                                </Paper>
-                            </Grid>)
+
+                            <Paper elevation={3} className="todolist" key={tl.id}>
+                                <TodoList id={tl.id}
+                                          title={tl.listTitle}
+                                          filterValue={tl.filter}
+                                          tasks={tasksForTodoList}
+                                          onDeleteTaskItem={onDeleteTaskItem}
+                                          onFilterTasks={onFilterTasks}
+                                          onChangeTaskTitle={onChangeTaskTitle}
+                                          onAddTaskItem={onAddTaskItem}
+                                          onCheckTaskItem={onCheckTaskItem}
+                                          onDeleteTodolist={onDeleteTodolist}/>
+                            </Paper>
+                        )
                     })
                 }
-            </Grid>
-        </Grid>
+            </div>
+        </main>
     )
 }
 
