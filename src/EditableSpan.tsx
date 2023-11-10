@@ -1,33 +1,36 @@
 import React, {ChangeEvent, useState} from "react";
 
-
 type EditableSpanPropsType = {
     title: string
-    onChangeTitleTaskItem: (title: string) => void
+    onChange: (title: string) => void
+    children?: React.ReactElement
 }
 
-export const EditableSpan: React.FC<EditableSpanPropsType> = ({title, onChangeTitleTaskItem}) => {
+export const EditableSpan: React.FC<EditableSpanPropsType> = ({title, onChange, children}) => {
     const [isEditMode, setIsEditMode] = useState(false)
     const [inputValue, setInputValue] = useState("")
 
-    const activeChangeMode = () => {
+    const activeChangeModeHandler = () => {
         setIsEditMode(true)
         setInputValue(title)
     }
-    const deactivateChangeMode = () => {
+
+    const deactivateChangeModeHandler = () => {
         setIsEditMode(false)
-        onChangeTitleTaskItem(inputValue)
+        onChange(inputValue)
     }
 
     const inputValueHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.currentTarget.value)
     }
 
-
     return (
-        isEditMode
-            ? <input value={inputValue} onChange={inputValueHandler} onBlur={deactivateChangeMode} autoFocus/>
-            : <span onDoubleClick={activeChangeMode}> {title} </span>
+        <>
+            {isEditMode
+                ? <input value={inputValue} onChange={inputValueHandler} onBlur={deactivateChangeModeHandler} autoFocus/>
+                : <span onDoubleClick={activeChangeModeHandler}> {title} </span>}
+            {children}
+        </>
 
     );
 };

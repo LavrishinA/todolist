@@ -10,65 +10,67 @@ import DeleteForever from '@mui/icons-material/DeleteForever';
 import {pink} from "@mui/material/colors";
 import ToggleButton from "@mui/material/ToggleButton/ToggleButton";
 
-export type TaskType = {
+export type Task = {
     id: string
     title: string
     isDone: boolean
 }
 
-type TodoListPropsType = {
+type Todolist = {
     id: string
     title: string
-    tasks: Array<TaskType>
+    tasks: Array<Task>
     filterValue: FilterType
-    onDeleteTaskItem: (id: string, todoListId: string) => void
-    onFilterTasks: (id: string, value: FilterType ) => void
-    onAddTaskItem: (taskTitle: string, todoListId: string) => void
-    onCheckTaskItem: (id: string, isDone: boolean, todoListId: string) => void
-    onChangeTaskTitle: (id: string, title: string, todoListId: string) => void
-    onDeleteTodolist: (id: string) => void
+    onCreateTask: (todoListId: string, taskTitle: string) => void
+    onUpdateTaskStatus: (todoListId: string, taskId: string, isDone: boolean) => void
+    onUpdateTaskTitle: (todoListId: string, taskId: string, title: string) => void
+    onDeleteTask: (todoListId: string, taskId: string) => void
+    onUpdateFilter: (todolistId: string, value: FilterType) => void
+    onUpdateTodolistTitle: (todolistId: string, title: string) => void
+    onDeleteTodolist: (todolistId: string) => void
 }
 
-const TodoList: FC<TodoListPropsType> = (props) => {
+export const TodoList: FC<Todolist> = ({
+                                           id,
+                                           title,
+                                           tasks,
+                                           filterValue,
+                                           onCreateTask,
+                                           onUpdateFilter,
+                                           onUpdateTaskStatus,
+                                           onUpdateTaskTitle,
+                                           onDeleteTask,
+                                           onDeleteTodolist,
+                                           onUpdateTodolistTitle
+                                       }) => {
 
-    function handleTaskFilterAll() {
-        props.onFilterTasks(props.id, FilterType.All)
+    const filterAllHandler = () => onUpdateFilter(id, FilterType.All)
+    const filterActiveHandler = () => onUpdateFilter(id, FilterType.Active)
+    const filterCompletedHandler = () => onUpdateFilter(id, FilterType.Completed)
+
+    const updateTaskTitleHandler = (taskId: string, title: string) => onUpdateTaskTitle(id, taskId, title)
+    const deleteTodolistHandler = () => onDeleteTodolist(id)
+    const todolistTitleHandler = (title: string) => onUpdateTodolistTitle(id, title)
+
+    function createTaskHandler(title: string) {
+        onCreateTask(id, title)
     }
 
-    function handleTaskFilterActive() {
-        props.onFilterTasks(props.id, FilterType.Active)
-    }
-
-    function handleTaskFilterCompleted() {
-        props.onFilterTasks(props.id, FilterType.Completed)
-    }
-
-    function handlerDeleteTodolist() {
-        props.onDeleteTodolist(props.id)
-    }
-
-    function handleAddTask(title: string) {
-        props.onAddTaskItem(title, props.id)
-    }
-
-    const onChangeTitleTaskItem = (taskID: string, title: string) => props.onChangeTaskTitle(taskID, title, props.id)
-
-
-    const tasksItems = props.tasks.map(task => {
-            const onDeleteTaskItem = () => props.onDeleteTaskItem(task.id, props.id)
-            const onCheckTaskItem = (e: ChangeEvent<HTMLInputElement>) => props.onCheckTaskItem(task.id, e.currentTarget.checked, props.id)
+    const tasksItems = tasks.map(task => {
+            const deleteTaskHandler = () => onDeleteTask(id, task.id)
+            const updateTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => onUpdateTaskStatus(id, task.id, e.currentTarget.checked)
 
             return (
 
                 <li key={task.id}>
-                    <Checkbox onChange={onCheckTaskItem} size="small" checked={task.isDone} sx={{
+                    <Checkbox onChange={updateTaskStatusHandler} size="small" checked={task.isDone} sx={{
                         color: pink[800],
                         '&.Mui-checked': {
                             color: pink[600],
                         },
                     }}/>
-                    <EditableSpan title={task.title} onChangeTitleTaskItem={(title) => onChangeTitleTaskItem(task.id, title)}/>
-                    <IconButton aria-label="delete" size="small" color="primary" onClick={onDeleteTaskItem}>
+                    <EditableSpan title={task.title} onChange={(title) => updateTaskTitleHandler(task.id, title)}/>
+                    <IconButton aria-label="delete" size="small" color="primary" onClick={deleteTaskHandler}>
                         <DeleteForever fontSize="inherit"/>
                     </IconButton>
                     <Divider/>
@@ -79,29 +81,28 @@ const TodoList: FC<TodoListPropsType> = (props) => {
 
     return (
         <>
-            <h3>{props.title}
-                <IconButton aria-label="delete" size="small" color="primary" onClick={handlerDeleteTodolist}>
+            <EditableSpan title={title} onChange={todolistTitleHandler}>
+                <IconButton aria-label="delete" size="small" color="primary" onClick={deleteTodolistHandler}>
                     <DeleteForever fontSize="inherit"/>
                 </IconButton>
-            </h3>
-            <AddItemForm onAddItem={handleAddTask}/>
+            </EditableSpan>
+            <AddItemForm onCreate={createTaskHandler}/>
             <ul>{tasksItems}</ul>
             <div>
                 <ToggleButtonGroup
                     color="primary"
                     size="small"
-                    value={props.filterValue}
+                    value={filterValue}
                     exclusive
                     aria-label="Platform"
                 >
-                    <ToggleButton onClick={handleTaskFilterAll} value={FilterType.All}>All</ToggleButton>
-                    <ToggleButton onClick={handleTaskFilterActive} value={FilterType.Active}>Active</ToggleButton>
-                    <ToggleButton onClick={handleTaskFilterCompleted}
-                                  value={FilterType.Completed}>Completed</ToggleButton>
+                    <ToggleButton onClick={filterAllHandler} value={FilterType.All}>All</ToggleButton>
+                    <ToggleButton onClick={filterActiveHandler} value={FilterType.Active}>Active</ToggleButton>
+                    <ToggleButton onClick={filterCompletedHandler} value={FilterType.Completed}>Completed</ToggleButton>
                 </ToggleButtonGroup>
             </div>
         </>
     );
 };
 
-export default TodoList;
+

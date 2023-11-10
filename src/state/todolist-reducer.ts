@@ -1,65 +1,45 @@
-import {TodoListType} from "../App";
-import {v1} from "uuid";
+import {Todolist} from "../App";
 import {FilterType} from "../CommonTypes/FilterType";
+import {v1} from "uuid";
 
 
-export type AddTl = {
-    type: "addtl"
-    listTitle: string
-    id: string
-}
-export type RemoveTl = {
-    type: "removetl"
-    id: string
-}
-export type UpdateTltitle = {
-    type: "updatetl"
-    id: string
-    listTitle: string
-}
-export type UpdateTlfilter = {
-    type: "updatefilter"
-    id: string
-    filter: FilterType
-}
-
-type Actions = AddTl | RemoveTl | UpdateTltitle | UpdateTlfilter
-
-
-export function todolistsReducer(todolists: TodoListType[], action: Actions): TodoListType[] {
+export function todolistsReducer(todolists: Todolist[], action: Actions): Todolist[] {
     switch (action.type) {
-        case "addtl":
+        case "todolist/create":
             return [
-                {id: action.id, listTitle: action.listTitle, filter: FilterType.All},
+                {id: action.id, listTitle: action.title, filter: FilterType.All},
                 ...todolists
             ]
-        case "removetl":
-            return todolists.filter(tl => tl.id !== action.id)
-        case "updatetl":
-            return todolists.map(tl => tl.id === action.id ? {...tl, listTitle: action.listTitle} : tl)
-        case "updatefilter":
-            return todolists.map(tl => tl.id === action.id ? {...tl, filter: action.filter} : tl)
+        case "todolist/delete":
+            return todolists.filter(tl => tl.id !== action.todoListId)
+        case "todolist/update-title":
+            return todolists.map(tl => tl.id === action.todoListId ? {...tl, listTitle: action.title} : tl)
+        case "todolist/update-filter":
+            return todolists.map(tl => tl.id === action.todoListId ? {...tl, filter: action.filter} : tl)
         default:
-            throw new Error("Unknown action type")
+            return todolists
     }
 }
 
-export function removeTl(id: string): RemoveTl {
-    return {
-        type: "removetl",
-        id,
-    } as const
-}
+export type Actions = CreateTodolist | DeleteTodolist | UpdateTodolistTitle | UpdateTodolistFilter
+export type CreateTodolist = ReturnType<typeof createTodolist>
+export type DeleteTodolist = ReturnType<typeof deleteTodolist>
+export type UpdateTodolistTitle = ReturnType<typeof updateTodolistTitle>
+export type UpdateTodolistFilter = ReturnType<typeof updateTodolistFilter>
 
-export function addTl(listTitle: string): AddTl {
+export function createTodolist(title: string) {
     const id = v1()
-    return {type: "addtl", listTitle, id} as const
+    return {type: "todolist/create", title, id} as const
 }
 
-export function updateTl(id: string, listTitle: string): UpdateTltitle {
-    return {type: "updatetl", id, listTitle} as const
+export function deleteTodolist(todoListId: string) {
+    return {type: "todolist/delete", todoListId,} as const
 }
 
-export function updateFilterTl(id: string, filter: FilterType): UpdateTlfilter {
-    return {type: "updatefilter", id, filter} as const
+export function updateTodolistTitle(todoListId: string, title: string) {
+    return {type: "todolist/update-title", todoListId, title} as const
+}
+
+export function updateTodolistFilter(todoListId: string, filter: FilterType) {
+    return {type: "todolist/update-filter", todoListId, filter} as const
 }

@@ -4,33 +4,31 @@ import  TextField from "@mui/material/TextField";
 import PlaylistAddSharp from '@mui/icons-material/PlaylistAddSharp';
 
 type AddItemFormPropsType = {
-    onAddItem: (title: string) => void
+    onCreate: (title: string) => void
 }
 
-export const AddItemForm: React.FC<AddItemFormPropsType> = ({onAddItem}) => {
-
+export const AddItemForm: React.FC<AddItemFormPropsType> = ({onCreate}) => {
     const [itemTitle, setItemTitle] = useState("")
     const [error, setError] = useState<null | string>(null)
 
-    function handleTaskListInput(e: ChangeEvent<HTMLInputElement>) {
+    function inputValueHandler(e: ChangeEvent<HTMLInputElement>) {
         setItemTitle(e.currentTarget.value)
     }
 
-    function handleAddTaskItemOnPressEnter(e: KeyboardEvent<HTMLInputElement>) {
-        setError(null)
-        e.key === "Enter" && handleAddTaskItem()
-    }
-
-
-    function handleAddTaskItem() {
+    function createItemHandler() {
         if (!itemTitle.trim()) {
             setError("Title is required")
             return
         }
 
-        onAddItem(itemTitle.trim())
+        onCreate(itemTitle.trim())
         setItemTitle("")
         setError(null)
+    }
+
+    function createItemOnPressKeyHandler(e: KeyboardEvent<HTMLInputElement>) {
+        setError(null)
+        e.key === "Enter" && createItemHandler()
     }
 
 
@@ -43,12 +41,12 @@ export const AddItemForm: React.FC<AddItemFormPropsType> = ({onAddItem}) => {
                 size="small"
                 helperText={error}
                 error={!!error}
-                onChange={handleTaskListInput}
-                onKeyDown={handleAddTaskItemOnPressEnter}
+                onChange={inputValueHandler}
+                onKeyDown={createItemOnPressKeyHandler}
                 autoComplete="off"
             />
 
-            <IconButton aria-label="add" size="small" color="primary" onClick={handleAddTaskItem}>
+            <IconButton aria-label="add" size="small" color="primary" onClick={createItemHandler}>
                 <PlaylistAddSharp fontSize="medium"/>
             </IconButton>
 

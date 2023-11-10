@@ -1,9 +1,8 @@
-import {TasksObjType} from "../App";
-import {addTask, changeTaskStatus, changeTaskTitle, deleteTask, tasksReducer} from "./task-reducer";
-import {FilterType} from "../CommonTypes/FilterType";
-import {addTl} from "./todolist-reducer";
+import {Tasks} from "../App";
+import {createTask, deleteTask, tasksReducer, updateTaskStatus, updateTaskTitle,} from "./task-reducer";
+import {createTodolist} from "./todolist-reducer";
 
-let task: TasksObjType;
+let task: Tasks;
 
 beforeEach(() => {
     task = {
@@ -22,7 +21,7 @@ beforeEach(() => {
 
 
 test("Task should be deleted", () => {
-    const tasksAfterReduce = tasksReducer(task, deleteTask("2", "todolist2"))
+    const tasksAfterReduce = tasksReducer(task, deleteTask("todolist2", "2"))
 
     expect(tasksAfterReduce["todolist1"].length).toBe(3)
     expect(tasksAfterReduce["todolist2"].length).toBe(2)
@@ -30,7 +29,7 @@ test("Task should be deleted", () => {
 })
 
 test("Task should be added", () => {
-    const tasksAfterReduce = tasksReducer(task, addTask("New task title", "todolist2"))
+    const tasksAfterReduce = tasksReducer(task, createTask("todolist2", "New task title"))
 
     expect(tasksAfterReduce["todolist1"].length).toBe(3)
     expect(tasksAfterReduce["todolist2"].length).toBe(4)
@@ -40,7 +39,7 @@ test("Task should be added", () => {
 })
 
 test("Task status should be changed", () => {
-    const tasksAfterReduce = tasksReducer(task, changeTaskStatus("2", true, "todolist2"))
+    const tasksAfterReduce = tasksReducer(task, updateTaskStatus("todolist2", "2", true))
 
 
     expect(tasksAfterReduce["todolist2"][1].isDone).toBeTruthy()
@@ -48,26 +47,22 @@ test("Task status should be changed", () => {
 })
 
 test("Task name should be changed", () => {
-    const tasksAfterReduce = tasksReducer(task, changeTaskTitle("2", "Task name changed", "todolist2"))
+    const tasksAfterReduce = tasksReducer(task, updateTaskTitle("todolist2", "2", "Task name changed"))
 
 
     expect(tasksAfterReduce["todolist2"][1].title).toBe("Task name changed")
     expect(tasksAfterReduce["todolist1"][1].title).toBe("TodoList")
 })
 
-test("New array shoul be added when new todolist is added", () => {
-    debugger
-    const todolists = [
-        {id: "todolist1", listTitle: "What to learn", filter: FilterType.All},
-        {id: "todolist2", listTitle: "What to buy", filter: FilterType.All}
-    ]
+test("New array should be added when new todolist is added", () => {
 
-    const action = addTl("todolist3")
+
+    const action = createTodolist("todolist3")
     const tasksAfterReduce = tasksReducer(task, action)
 
     const keys = Object.keys(tasksAfterReduce)
     const newKey = keys?.find(k => k !== "todolist1" && k !== "todolist2")
-    if(!newKey) throw Error("New key undefined")
+    if (!newKey) throw Error("New key undefined")
 
     expect(keys.length).toBe(3)
 

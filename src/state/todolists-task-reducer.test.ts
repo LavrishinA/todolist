@@ -1,18 +1,17 @@
-import {FilterType} from "../CommonTypes/FilterType";
 import {tasksReducer} from "./task-reducer";
-import {addTl, todolistsReducer} from "./todolist-reducer";
-import {TasksObjType, TodoListType} from "../App";
+import {createTodolist, todolistsReducer} from "./todolist-reducer";
+import {Tasks, Todolist} from "../App";
 
 
 test("ids should be equals", () => {
-    const task: TasksObjType = {
+    const task: Tasks = {
 
     }
 
-    const todolists: TodoListType[] = [
+    const todolists: Todolist[] = [
 
     ]
-    const action = addTl("todolist3")
+    const action = createTodolist("todolist3")
     const tasksAfterReduce = tasksReducer(task, action)
     const todolistsAfterReduce = todolistsReducer(todolists, action)
 

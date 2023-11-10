@@ -1,12 +1,11 @@
 import {v1} from "uuid";
 import {FilterType} from "../CommonTypes/FilterType";
-import {TodoListType} from "../App";
-import {addTl, removeTl, updateFilterTl, updateTl, todolistsReducer} from "./todolist-reducer";
-
+import {Todolist} from "../App";
+import {createTodolist, deleteTodolist, updateTodolistTitle, updateTodolistFilter, todolistsReducer} from "./todolist-reducer";
 
 let todolist1ID: string
 let todolist2ID: string
-let todolists: TodoListType[]
+let todolists: Todolist[]
 
 beforeEach(() => {
     todolist1ID = v1()
@@ -19,22 +18,22 @@ beforeEach(() => {
 
 
 test("New todolist should be added", () => {
-    const todolistsAfterReduce = todolistsReducer(todolists, addTl("New todolist title"))
+    const todolistsAfterReduce = todolistsReducer(todolists, createTodolist("New todolist title"))
 
     expect(todolistsAfterReduce.length).toBe(3)
-    expect(todolistsAfterReduce[2].filter).toBe(FilterType.All)
-    expect(todolistsAfterReduce[2].listTitle).toBe("New todolist title")
+    expect(todolistsAfterReduce[0].filter).toBe(FilterType.All)
+    expect(todolistsAfterReduce[0].listTitle).toBe("New todolist title")
 })
 
 test("todolist should be removed todolist", () => {
-    const todolistsAfterReduce = todolistsReducer(todolists, removeTl(todolist1ID))
+    const todolistsAfterReduce = todolistsReducer(todolists, deleteTodolist(todolist1ID))
 
     expect(todolistsAfterReduce.length).toBe(1)
     expect(todolistsAfterReduce[0].id).toBe(todolist2ID)
 })
 
 test("todolist title should be changed", () => {
-    const todolistsAfterReduce = todolistsReducer(todolists, updateTl(todolist2ID, "What to pay"))
+    const todolistsAfterReduce = todolistsReducer(todolists, updateTodolistTitle(todolist2ID, "What to pay"))
 
     expect(todolistsAfterReduce[0].listTitle).toBe("What to learn")
     expect(todolistsAfterReduce[1].listTitle).toBe("What to pay")
@@ -42,7 +41,7 @@ test("todolist title should be changed", () => {
 
 test("todolist filter should be changed", () => {
 
-    const todolistsAfterReduce = todolistsReducer(todolists, updateFilterTl(todolist2ID, FilterType.Active))
+    const todolistsAfterReduce = todolistsReducer(todolists, updateTodolistFilter(todolist2ID, FilterType.Active))
     expect(todolistsAfterReduce[0].filter).toBe(FilterType.All)
     expect(todolistsAfterReduce[1].filter).toBe(FilterType.Active)
 })
