@@ -1,9 +1,19 @@
-import {Tasks} from "../App";
 import {v1} from "uuid";
 import {CreateTodolist, DeleteTodolist} from "./todolist-reducer";
 
+export type Task = {
+    id: string
+    title: string
+    isDone: boolean
+}
 
-export function tasksReducer(task: Tasks, action: Actions): Tasks {
+export type Tasks = {
+    [key: string]: Array<Task>
+}
+
+const tasksInit: Tasks = {}
+
+export function tasksReducer(task: Tasks = tasksInit, action: Actions): Tasks {
     switch (action.type) {
         case "task/delete":
             return {
