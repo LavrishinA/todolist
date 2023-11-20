@@ -1,14 +1,7 @@
 import {v1} from "uuid";
 import {FilterType} from "../CommonTypes/FilterType";
-
-import {
-    createTodolist,
-    deleteTodolist,
-    updateTodolistTitle,
-    updateTodolistFilter,
-    todolistsReducer,
-    Todolist
-} from "./todolist-reducer";
+import {Todolist} from "../App";
+import {createTodolist, deleteTodolist, updateTodolistTitle, updateTodolistFilter, todolistsReducer} from "./todolist-reducer";
 
 let todolist1ID: string
 let todolist2ID: string

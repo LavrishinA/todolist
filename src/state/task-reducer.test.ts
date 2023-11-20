@@ -1,5 +1,5 @@
-
-import {createTask, deleteTask, Tasks, tasksReducer, updateTaskStatus, updateTaskTitle,} from "./task-reducer";
+import {Tasks} from "../App";
+import {createTask, deleteTask, tasksReducer, updateTaskStatus, updateTaskTitle,} from "./task-reducer";
 import {createTodolist} from "./todolist-reducer";
 
 let task: Tasks;
