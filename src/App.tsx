@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {AddItemForm} from "./AddItemForm";
 import {TodoList} from "./TodoList";
 import {
@@ -16,45 +16,22 @@ import {Store} from "./state/store";
 import {FilterType} from "./CommonTypes/FilterType";
 
 
-
 function App() {
     const todolists = useSelector<Store, Todolist[]>(state => state.todolists)
     const tasks = useSelector<Store, Tasks>(state => state.tasks)
     const dispatch = useDispatch()
 
     //CRUD TASK
-    function createTaskHandler(todoListId: string, title: string) {
-        dispatch(createTask(todoListId, title))
-    }
-
-    function updateTaskStatusHandler(todoListId: string, taskId: string, isDone: boolean) {
-        dispatch(updateTaskStatus(todoListId, taskId, isDone))
-    }
-
-    function updateTaskTitleHandler(todoListId: string, taskId: string, title: string, ) {
-        dispatch(updateTaskTitle(todoListId, taskId, title))
-    }
-
-    function deleteTaskHandler(todoListId: string, taskId: string) {
-        dispatch(deleteTask(todoListId, taskId))
-    }
+    const createTaskHandler = useCallback((todoListId: string, title: string) => dispatch(createTask(todoListId, title)), [dispatch])
+    const updateTaskStatusHandler = useCallback((todoListId: string, taskId: string, isDone: boolean) => dispatch(updateTaskStatus(todoListId, taskId, isDone)), [dispatch])
+    const updateTaskTitleHandler = useCallback((todoListId: string, taskId: string, title: string) => dispatch(updateTaskTitle(todoListId, taskId, title)), [dispatch])
+    const deleteTaskHandler = useCallback((todoListId: string, taskId: string) => dispatch(deleteTask(todoListId, taskId)), [dispatch])
 
     //CRUD TODOLIST
-    function createTodolistHandler(title: string) {
-        dispatch(createTodolist(title))
-    }
-
-    function updateFilterHandler(todolistId: string, filterValue: FilterType) {
-        dispatch(updateTodolistFilter(todolistId, filterValue))
-    }
-
-    function updateTodolistTitleHandler(todolistId: string, title: string) {
-        dispatch(updateTodolistTitle(todolistId, title))
-    }
-
-    function deleteTodolistHandler(todolistId: string) {
-        dispatch(deleteTodolist(todolistId))
-    }
+    const createTodolistHandler = useCallback((title: string) => dispatch(createTodolist(title)), [dispatch])
+    const updateFilterHandler = useCallback((todolistId: string, filterValue: FilterType) => dispatch(updateTodolistFilter(todolistId, filterValue)), [dispatch])
+    const updateTodolistTitleHandler = useCallback((todolistId: string, title: string) => dispatch(updateTodolistTitle(todolistId, title)), [dispatch])
+    const deleteTodolistHandler = useCallback((todolistId: string) => dispatch(deleteTodolist(todolistId)), [dispatch])
 
 
     return (
@@ -65,13 +42,6 @@ function App() {
             <Grid item container spacing={2} xs={10}>
                 {
                     todolists.map(tl => {
-                        let tasksForTodoList = tasks[tl.id]
-                        if (tl.filter === "active") {
-                            tasksForTodoList = tasksForTodoList.filter(task => !task.isDone)
-                        }
-                        if (tl.filter === "completed") {
-                            tasksForTodoList = tasksForTodoList.filter(task => task.isDone)
-                        }
                         return (
                             <Grid item>
                                 <Paper elevation={3} className="todolist">
@@ -79,7 +49,7 @@ function App() {
                                               id={tl.id}
                                               title={tl.listTitle}
                                               filterValue={tl.filter}
-                                              tasks={tasksForTodoList}
+                                              tasks={tasks[tl.id]}
                                               onDeleteTask={deleteTaskHandler}
                                               onCreateTask={createTaskHandler}
                                               onUpdateTaskStatus={updateTaskStatusHandler}

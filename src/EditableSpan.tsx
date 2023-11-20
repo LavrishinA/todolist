@@ -6,10 +6,10 @@ type EditableSpanPropsType = {
     children?: React.ReactElement
 }
 
-export const EditableSpan: React.FC<EditableSpanPropsType> = ({title, onChange, children}) => {
+export const EditableSpan: React.FC<EditableSpanPropsType> = React.memo(({title, onChange, children}) => {
     const [isEditMode, setIsEditMode] = useState(false)
     const [inputValue, setInputValue] = useState("")
-
+    console.log(`${title}`)
     const activeChangeModeHandler = () => {
         setIsEditMode(true)
         setInputValue(title)
@@ -29,9 +29,8 @@ export const EditableSpan: React.FC<EditableSpanPropsType> = ({title, onChange, 
             {isEditMode
                 ? <input value={inputValue} onChange={inputValueHandler} onBlur={deactivateChangeModeHandler} autoFocus/>
                 : <span onDoubleClick={activeChangeModeHandler}> {title} </span>}
-            {children}
         </>
 
     );
-};
+});
 

@@ -1,15 +1,16 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
 import IconButton from "@mui/material/IconButton";
-import  TextField from "@mui/material/TextField";
+import TextField from "@mui/material/TextField";
 import PlaylistAddSharp from '@mui/icons-material/PlaylistAddSharp';
 
 type AddItemFormPropsType = {
     onCreate: (title: string) => void
 }
 
-export const AddItemForm: React.FC<AddItemFormPropsType> = ({onCreate}) => {
+export const AddItemForm: React.FC<AddItemFormPropsType> = React.memo(({onCreate}) => {
     const [itemTitle, setItemTitle] = useState("")
     const [error, setError] = useState<null | string>(null)
+
 
     function inputValueHandler(e: ChangeEvent<HTMLInputElement>) {
         setItemTitle(e.currentTarget.value)
@@ -27,7 +28,7 @@ export const AddItemForm: React.FC<AddItemFormPropsType> = ({onCreate}) => {
     }
 
     function createItemOnPressKeyHandler(e: KeyboardEvent<HTMLInputElement>) {
-        setError(null)
+        if (error !== null) setError(null)
         e.key === "Enter" && createItemHandler()
     }
 
@@ -52,5 +53,5 @@ export const AddItemForm: React.FC<AddItemFormPropsType> = ({onCreate}) => {
 
         </div>
     );
-};
+});
 
