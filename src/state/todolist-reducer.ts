@@ -1,9 +1,17 @@
-import {Todolist} from "../App";
+
 import {FilterType} from "../CommonTypes/FilterType";
 import {v1} from "uuid";
 
+export type Todolist = {
+    id: string
+    listTitle: string
+    filter: FilterType
+}
 
-export function todolistsReducer(todolists: Todolist[], action: Actions): Todolist[] {
+
+const initialState: Todolist[] = []
+
+export function todolistsReducer(todolists: Todolist[] = initialState, action: Actions): Todolist[] {
     switch (action.type) {
         case "todolist/create":
             return [

@@ -9,12 +9,8 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import DeleteForever from '@mui/icons-material/DeleteForever';
 import {pink} from "@mui/material/colors";
 import ToggleButton from "@mui/material/ToggleButton/ToggleButton";
+import {Task} from "./state/task-reducer";
 
-export type Task = {
-    id: string
-    title: string
-    isDone: boolean
-}
 
 type Todolist = {
     id: string
@@ -48,7 +44,7 @@ export const TodoList: FC<Todolist> = ({
     const filterActiveHandler = () => onUpdateFilter(id, FilterType.Active)
     const filterCompletedHandler = () => onUpdateFilter(id, FilterType.Completed)
 
-    const updateTaskTitleHandler = (taskId: string, title: string) => onUpdateTaskTitle(id, taskId, title)
+
     const deleteTodolistHandler = () => onDeleteTodolist(id)
     const todolistTitleHandler = (title: string) => onUpdateTodolistTitle(id, title)
 
@@ -57,9 +53,9 @@ export const TodoList: FC<Todolist> = ({
     }
 
     const tasksItems = tasks.map(task => {
-            const deleteTaskHandler = () => onDeleteTask(id, task.id)
             const updateTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => onUpdateTaskStatus(id, task.id, e.currentTarget.checked)
-
+            const updateTaskTitleHandler = (title: string) => onUpdateTaskTitle(id, task.id, title)
+            const deleteTaskHandler = () => onDeleteTask(id, task.id)
             return (
 
                 <li key={task.id}>
@@ -69,7 +65,7 @@ export const TodoList: FC<Todolist> = ({
                             color: pink[600],
                         },
                     }}/>
-                    <EditableSpan title={task.title} onChange={(title) => updateTaskTitleHandler(task.id, title)}/>
+                    <EditableSpan title={task.title} onChange={updateTaskTitleHandler}/>
                     <IconButton aria-label="delete" size="small" color="primary" onClick={deleteTaskHandler}>
                         <DeleteForever fontSize="inherit"/>
                     </IconButton>
