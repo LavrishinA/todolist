@@ -95,7 +95,7 @@ export const TodoList: FC<Todolist> = React.memo(({
 });
 
 
-type TaskItemType = {
+export type TaskItemType = {
     task: Task
     id: string
     onUpdateTaskStatus: (todoListId: string, taskId: string, isDone: boolean) => void
@@ -104,7 +104,7 @@ type TaskItemType = {
 }
 
 
-const TaskItem: FC<TaskItemType> = React.memo(({task, id, onUpdateTaskStatus, onUpdateTaskTitle, onDeleteTask}) => {
+export const TaskItem: FC<TaskItemType> = React.memo(({task, id, onUpdateTaskStatus, onUpdateTaskTitle, onDeleteTask}) => {
 
     const updateTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => onUpdateTaskStatus(id, task.id, e.currentTarget.checked)
     const updateTaskTitleHandler = useCallback((title: string) => onUpdateTaskTitle(id, task.id, title), [id, onUpdateTaskTitle, task.id])

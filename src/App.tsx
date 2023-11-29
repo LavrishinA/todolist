@@ -16,7 +16,7 @@ import {Store} from "./state/store";
 import {FilterType} from "./CommonTypes/FilterType";
 
 
-function App() {
+export function App() {
     const todolists = useSelector<Store, Todolist[]>(state => state.todolists)
     const tasks = useSelector<Store, Tasks>(state => state.tasks)
     const dispatch = useDispatch()

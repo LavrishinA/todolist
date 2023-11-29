@@ -3,7 +3,7 @@ import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 import PlaylistAddSharp from '@mui/icons-material/PlaylistAddSharp';
 
-type AddItemFormPropsType = {
+export type AddItemFormPropsType = {
     onCreate: (title: string) => void
 }
 

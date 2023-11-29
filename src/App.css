@@ -12,3 +12,7 @@ body {
 .todolist {
   padding: 8px 16px;
 }
+
+li {
+  list-style: none;
+}

@@ -6,7 +6,7 @@ type EditableSpanPropsType = {
     children?: React.ReactElement
 }
 
-export const EditableSpan: React.FC<EditableSpanPropsType> = React.memo(({title, onChange, children}) => {
+export const EditableSpan: React.FC<EditableSpanPropsType> = React.memo(({title, onChange}) => {
     const [isEditMode, setIsEditMode] = useState(false)
     const [inputValue, setInputValue] = useState("")
     console.log(`${title}`)
