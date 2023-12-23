@@ -4,6 +4,9 @@ import {Meta, StoryObj} from "@storybook/react";
 const meta: Meta<typeof EditableSpan> = {
     title: 'Todolist/EditableSpan',
     component: EditableSpan,
+    parameters: {
+        layout: 'centered',
+    },
     tags: ['autodocs'],
     argTypes: {
         title: {

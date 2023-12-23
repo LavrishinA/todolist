@@ -1,5 +1,6 @@
 import {Tasks, tasksReducer} from "./task-reducer";
-import {createTodolist, Todolist, todolistsReducer} from "./todolist-reducer";
+import {createTodolist, TodolistUI, todolistsReducer} from "./todolist-reducer";
+import {FilterType} from "../CommonTypes/FilterType";
 
 
 test("ids should be equals", () => {
@@ -7,10 +8,12 @@ test("ids should be equals", () => {
 
     }
 
-    const todolists: Todolist[] = [
+    const todolists: TodolistUI[] = [
 
     ]
-    const action = createTodolist("todolist3")
+
+    const newTodolist = {id: "todolistId3", title: "What to buy", addedDate: new Date(), order: 3, filter: FilterType.All}
+    const action = createTodolist(newTodolist)
     const tasksAfterReduce = tasksReducer(task, action)
     const todolistsAfterReduce = todolistsReducer(todolists, action)
 
@@ -18,6 +21,6 @@ test("ids should be equals", () => {
     const idFromTask = keys[0]
     const idFromTodolists = todolistsAfterReduce[0].id
 
-    expect(idFromTask).toBe(action.id)
-    expect(idFromTodolists).toBe(action.id)
+    expect(idFromTask).toBe(action.todolist.id)
+    expect(idFromTodolists).toBe(action.todolist.id)
 })

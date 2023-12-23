@@ -1,20 +1,20 @@
-import React, {ChangeEvent, FC, useCallback} from "react";
+import React, {FC, useCallback, useEffect} from "react";
 import {FilterType} from "./CommonTypes/FilterType";
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
-import Checkbox from "@mui/material/Checkbox";
-import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import DeleteForever from '@mui/icons-material/DeleteForever';
-import {pink} from "@mui/material/colors";
 import ToggleButton from "@mui/material/ToggleButton/ToggleButton";
-import {Task} from "./state/task-reducer";
+import {TaskItem} from "./TaskItem";
+import {TaskItemArgs, TaskStatuses} from "./api/todolistApi";
+import {useAppDispatch} from "./state/store";
+import {thunkSetTasks} from "./state/task-reducer";
 
-const filterTasks = (tasks: Array<Task>, filter: FilterType): Array<Task> => {
+const filterTasks = (tasks: Array<TaskItemArgs>, filter: FilterType): Array<TaskItemArgs> => {
     if (filter === FilterType.All) return tasks
-    if (filter === FilterType.Active) return tasks.filter(t => !t.isDone)
-    if (filter === FilterType.Completed) return tasks.filter(t => t.isDone)
+    if (filter === FilterType.Active) return tasks.filter(t => t.status === TaskStatuses.New)
+    if (filter === FilterType.Completed) return tasks.filter(t => t.status === TaskStatuses.Completed)
     return tasks
 }
 
@@ -22,10 +22,10 @@ const filterTasks = (tasks: Array<Task>, filter: FilterType): Array<Task> => {
 type Todolist = {
     id: string
     title: string
-    tasks: Array<Task>
+    tasks: Array<TaskItemArgs>
     filterValue: FilterType
     onCreateTask: (todoListId: string, taskTitle: string) => void
-    onUpdateTaskStatus: (todoListId: string, taskId: string, isDone: boolean) => void
+    onUpdateTaskStatus: (todoListId: string, taskId: string, status: TaskStatuses) => void
     onUpdateTaskTitle: (todoListId: string, taskId: string, title: string) => void
     onDeleteTask: (todoListId: string, taskId: string) => void
     onUpdateFilter: (todolistId: string, value: FilterType) => void
@@ -46,11 +46,15 @@ export const TodoList: FC<Todolist> = React.memo(({
                                                       onDeleteTodolist,
                                                       onUpdateTodolistTitle
                                                   }) => {
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        dispatch(thunkSetTasks(id))
+    }, [dispatch, id]);
 
     const filterAllHandler = useCallback(() => onUpdateFilter(id, FilterType.All), [id, onUpdateFilter])
     const filterActiveHandler = useCallback(() => onUpdateFilter(id, FilterType.Active), [id, onUpdateFilter])
     const filterCompletedHandler = useCallback(() => onUpdateFilter(id, FilterType.Completed), [id, onUpdateFilter])
-
 
     const deleteTodolistHandler = useCallback(() => onDeleteTodolist(id), [id, onDeleteTodolist])
     const todolistTitleHandler = useCallback((title: string) => onUpdateTodolistTitle(id, title), [id, onUpdateTodolistTitle])
@@ -95,35 +99,4 @@ export const TodoList: FC<Todolist> = React.memo(({
 });
 
 
-export type TaskItemType = {
-    task: Task
-    id: string
-    onUpdateTaskStatus: (todoListId: string, taskId: string, isDone: boolean) => void
-    onUpdateTaskTitle: (todoListId: string, taskId: string, title: string) => void
-    onDeleteTask: (todoListId: string, taskId: string) => void
-}
-
-
-export const TaskItem: FC<TaskItemType> = React.memo(({task, id, onUpdateTaskStatus, onUpdateTaskTitle, onDeleteTask}) => {
-
-    const updateTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => onUpdateTaskStatus(id, task.id, e.currentTarget.checked)
-    const updateTaskTitleHandler = useCallback((title: string) => onUpdateTaskTitle(id, task.id, title), [id, onUpdateTaskTitle, task.id])
-    const deleteTaskHandler = () => onDeleteTask(id, task.id)
-
-    return (
-        <li key={id}>
-            <Checkbox onChange={updateTaskStatusHandler} size="small" checked={task.isDone} sx={{
-                color: pink[800],
-                '&.Mui-checked': {
-                    color: pink[600],
-                },
-            }}/>
-            <EditableSpan title={task.title} onChange={updateTaskTitleHandler}/>
-            <IconButton aria-label="delete" size="small" color="primary" onClick={deleteTaskHandler}>
-                <DeleteForever fontSize="inherit"/>
-            </IconButton>
-            <Divider/>
-        </li>
-    );
-});
 

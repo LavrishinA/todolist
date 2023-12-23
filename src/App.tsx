@@ -1,37 +1,57 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {AddItemForm} from "./AddItemForm";
 import {TodoList} from "./TodoList";
 import {
-    createTodolist,
-    deleteTodolist,
-    Todolist,
-    updateTodolistFilter,
-    updateTodolistTitle
+    thunkCreateTodolist,
+    thunkDeleteTodolist,
+    thunkSetTodolist,
+    thunkUpdateTodolist,
+    updateTodolistFilter
 } from "./state/todolist-reducer";
-import {createTask, deleteTask, Tasks, updateTaskStatus, updateTaskTitle} from "./state/task-reducer";
+import {thunkCreateTask, thunkDeleteTask, thunkUpdateTask} from "./state/task-reducer";
 import {Grid, Paper} from "@mui/material";
 import './App.css';
-import {useDispatch, useSelector} from "react-redux";
-import {Store} from "./state/store";
+import {useAppDispatch, useAppSelector} from "./state/store";
 import {FilterType} from "./CommonTypes/FilterType";
+import {TaskStatuses} from "./api/todolistApi";
 
 
 export function App() {
-    const todolists = useSelector<Store, Todolist[]>(state => state.todolists)
-    const tasks = useSelector<Store, Tasks>(state => state.tasks)
-    const dispatch = useDispatch()
+    const todolists = useAppSelector(state => state.todolists)
+    const tasks = useAppSelector(state => state.tasks)
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        dispatch(thunkSetTodolist())
+    }, [dispatch]);
 
     //CRUD TASK
-    const createTaskHandler = useCallback((todoListId: string, title: string) => dispatch(createTask(todoListId, title)), [dispatch])
-    const updateTaskStatusHandler = useCallback((todoListId: string, taskId: string, isDone: boolean) => dispatch(updateTaskStatus(todoListId, taskId, isDone)), [dispatch])
-    const updateTaskTitleHandler = useCallback((todoListId: string, taskId: string, title: string) => dispatch(updateTaskTitle(todoListId, taskId, title)), [dispatch])
-    const deleteTaskHandler = useCallback((todoListId: string, taskId: string) => dispatch(deleteTask(todoListId, taskId)), [dispatch])
+    const createTaskHandler = useCallback((todoListId: string, title: string) => {
+        dispatch(thunkCreateTask(todoListId, title))
+    }, [dispatch])
+    const updateTaskStatusHandler = useCallback((todoListId: string, taskId: string, status: TaskStatuses) => {
+        dispatch(thunkUpdateTask(todoListId, taskId, {status}))
+    }, [dispatch])
+    const updateTaskTitleHandler = useCallback((todoListId: string, taskId: string, title: string) => {
+        dispatch(thunkUpdateTask(todoListId, taskId, {title}))
+    }, [dispatch])
+    const deleteTaskHandler = useCallback((todoListId: string, taskId: string) => {
+        dispatch(thunkDeleteTask(todoListId, taskId))
+    }, [dispatch])
 
     //CRUD TODOLIST
-    const createTodolistHandler = useCallback((title: string) => dispatch(createTodolist(title)), [dispatch])
-    const updateFilterHandler = useCallback((todolistId: string, filterValue: FilterType) => dispatch(updateTodolistFilter(todolistId, filterValue)), [dispatch])
-    const updateTodolistTitleHandler = useCallback((todolistId: string, title: string) => dispatch(updateTodolistTitle(todolistId, title)), [dispatch])
-    const deleteTodolistHandler = useCallback((todolistId: string) => dispatch(deleteTodolist(todolistId)), [dispatch])
+    const createTodolistHandler = useCallback((title: string) => {
+        dispatch(thunkCreateTodolist(title))
+    }, [dispatch])
+    const updateFilterHandler = useCallback((todolistId: string, filterValue: FilterType) => {
+        dispatch(updateTodolistFilter(todolistId, filterValue))
+    }, [dispatch])
+    const updateTodolistTitleHandler = useCallback((todolistId: string, title: string) => {
+        dispatch(thunkUpdateTodolist(todolistId, title))
+    }, [dispatch])
+    const deleteTodolistHandler = useCallback((todolistId: string) => {
+        dispatch(thunkDeleteTodolist(todolistId))
+    }, [dispatch])
 
 
     return (
@@ -47,7 +67,7 @@ export function App() {
                                 <Paper elevation={3} className="todolist">
                                     <TodoList key={tl.id}
                                               id={tl.id}
-                                              title={tl.listTitle}
+                                              title={tl.title}
                                               filterValue={tl.filter}
                                               tasks={tasks[tl.id]}
                                               onDeleteTask={deleteTaskHandler}

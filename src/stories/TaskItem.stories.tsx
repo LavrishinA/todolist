@@ -1,5 +1,6 @@
 import {Meta, StoryObj} from "@storybook/react";
-import {TaskItem} from "../TodoList";
+import {TaskItem} from "../TaskItem";
+import {TaskPriorities, TaskStatuses} from "../api/todolistApi";
 
 const meta: Meta<typeof TaskItem> = {
     title: 'Todolist/TaskItem',
@@ -20,7 +21,8 @@ const meta: Meta<typeof TaskItem> = {
         }
     },
     args: {
-        task: {id: '12wsdewfijdei', title: 'JS', isDone: false},
+        task: { id: "1", title: "CSS", status: TaskStatuses.New, todoListId: "todolistId1", description: '',
+            startDate: null, deadline: null, addedDate: null, order: 0, priority: TaskPriorities.Low },
         id: 'fgdosrg8rgjuh'
     },
 };
@@ -32,7 +34,8 @@ export const TaskItemDefault: Story = {};
 
 export const TaskItemIsDone: Story = {
     args: {
-        task: {id: '1', title: 'CSS', isDone: true},
+        task: { id: "1", title: "CSS", status: TaskStatuses.Completed, todoListId: "todolistId1", description: '',
+            startDate: null, deadline: null, addedDate:  null, order: 0, priority: TaskPriorities.Low },
         id: "2"
     },
 };
