@@ -1,10 +1,10 @@
 import {Meta, StoryObj} from "@storybook/react";
-import {TaskItem} from "../TaskItem";
+import {Task} from "../features/TodolistsList/Todolist/Task/Task";
 import {TaskPriorities, TaskStatuses} from "../api/todolistApi";
 
-const meta: Meta<typeof TaskItem> = {
-    title: 'Todolist/TaskItem',
-    component: TaskItem,
+const meta: Meta<typeof Task> = {
+    title: 'TodolistsList/Task',
+    component: Task,
     parameters: {
         layout: 'centered',
     },
@@ -28,7 +28,7 @@ const meta: Meta<typeof TaskItem> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof TaskItem>;
+type Story = StoryObj<typeof Task>;
 
 export const TaskItemDefault: Story = {};
 

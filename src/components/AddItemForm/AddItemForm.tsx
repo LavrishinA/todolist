@@ -1,13 +1,14 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
-import IconButton from "@mui/material/IconButton";
+import IconButton from "@mui/material/IconButton/";
 import TextField from "@mui/material/TextField";
 import PlaylistAddSharp from '@mui/icons-material/PlaylistAddSharp';
 
 export type AddItemFormPropsType = {
     onCreate: (title: string) => void
+    disabled?: boolean
 }
 
-export const AddItemForm: React.FC<AddItemFormPropsType> = React.memo(({onCreate}) => {
+export const AddItemForm: React.FC<AddItemFormPropsType> = React.memo(({onCreate, disabled}) => {
     const [itemTitle, setItemTitle] = useState("")
     const [error, setError] = useState<null | string>(null)
 
@@ -45,12 +46,12 @@ export const AddItemForm: React.FC<AddItemFormPropsType> = React.memo(({onCreate
                 onChange={inputValueHandler}
                 onKeyDown={createItemOnPressKeyHandler}
                 autoComplete="off"
+                disabled={disabled}
             />
 
-            <IconButton aria-label="add" size="small" color="primary" onClick={createItemHandler}>
+            <IconButton aria-label="add" size="small" color="primary" onClick={createItemHandler} >
                 <PlaylistAddSharp fontSize="medium"/>
             </IconButton>
-
         </div>
     );
 });

@@ -1,5 +1,5 @@
-import {createTask, deleteTask, Tasks, tasksReducer, updateTask} from "./task-reducer";
-import {createTodolist} from "./todolist-reducer";
+import {createTask, deleteTask, Tasks, tasksReducer, updateTask} from "../features/TodolistsList/task-reducer";
+import {createTodolist} from "../features/TodolistsList/todolist-reducer";
 import {TaskPriorities, TaskStatuses} from "../api/todolistApi";
 
 let task: Tasks;

@@ -1,13 +1,12 @@
 import {v1} from "uuid";
-import {FilterType} from "../CommonTypes/FilterType";
 import {
     createTodolist,
-    deleteTodolist, setTodolists,
+    deleteTodolist, FilterType, setTodolists,
     todolistsReducer,
     TodolistUI,
     updateTodolistFilter,
     updateTodolistTitle
-} from "./todolist-reducer";
+} from "../features/TodolistsList/todolist-reducer";
 
 let todolist1ID: string
 let todolist2ID: string
@@ -17,8 +16,8 @@ beforeEach(() => {
     todolist1ID = v1()
     todolist2ID = v1()
     todolists = [
-        {id: todolist1ID, title: "What to learn", addedDate: new Date(), order: 1, filter: FilterType.All},
-        {id: todolist2ID, title: "What to pay", addedDate: new Date(), order: 2, filter: FilterType.All},
+        {id: todolist1ID, title: "What to learn", addedDate: new Date(), order: 1, filter: FilterType.All, entityStatus: "idle"},
+        {id: todolist2ID, title: "What to pay", addedDate: new Date(), order: 2, filter: FilterType.All, entityStatus: "idle"},
     ]
 })
 

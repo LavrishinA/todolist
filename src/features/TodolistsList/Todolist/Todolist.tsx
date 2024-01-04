@@ -1,15 +1,16 @@
 import React, {FC, useCallback, useEffect} from "react";
-import {FilterType} from "./CommonTypes/FilterType";
-import {AddItemForm} from "./AddItemForm";
-import {EditableSpan} from "./EditableSpan";
-import IconButton from "@mui/material/IconButton";
+import {AddItemForm} from "../../../components/AddItemForm/AddItemForm";
+import {EditableSpan} from "../../../components/EditableSpan/EditableSpan";
+import {Task} from "./Task/Task";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import IconButton from "@mui/material/IconButton";
 import DeleteForever from '@mui/icons-material/DeleteForever';
-import ToggleButton from "@mui/material/ToggleButton/ToggleButton";
-import {TaskItem} from "./TaskItem";
-import {TaskItemArgs, TaskStatuses} from "./api/todolistApi";
-import {useAppDispatch} from "./state/store";
-import {thunkSetTasks} from "./state/task-reducer";
+import ToggleButton from "@mui/material/ToggleButton";
+import {TaskItemArgs, TaskStatuses} from "../../../api/todolistApi";
+import {useAppDispatch} from "../../../app/store";
+import {thunkSetTasks} from "../task-reducer";
+import {FilterType} from "../todolist-reducer";
+import {RequestStatusType} from "../../../app/app-reducer";
 
 const filterTasks = (tasks: Array<TaskItemArgs>, filter: FilterType): Array<TaskItemArgs> => {
     if (filter === FilterType.All) return tasks
@@ -19,9 +20,10 @@ const filterTasks = (tasks: Array<TaskItemArgs>, filter: FilterType): Array<Task
 }
 
 
-type Todolist = {
+type TodolistArgs = {
     id: string
     title: string
+    entityStatus: RequestStatusType
     tasks: Array<TaskItemArgs>
     filterValue: FilterType
     onCreateTask: (todoListId: string, taskTitle: string) => void
@@ -33,19 +35,20 @@ type Todolist = {
     onDeleteTodolist: (todolistId: string) => void
 }
 
-export const TodoList: FC<Todolist> = React.memo(({
-                                                      id,
-                                                      title,
-                                                      tasks,
-                                                      filterValue,
-                                                      onCreateTask,
-                                                      onUpdateFilter,
-                                                      onUpdateTaskStatus,
-                                                      onUpdateTaskTitle,
-                                                      onDeleteTask,
-                                                      onDeleteTodolist,
-                                                      onUpdateTodolistTitle
-                                                  }) => {
+export const Todolist: FC<TodolistArgs> = React.memo(({
+                                                          id,
+                                                          title,
+                                                          entityStatus,
+                                                          tasks,
+                                                          filterValue,
+                                                          onCreateTask,
+                                                          onUpdateFilter,
+                                                          onUpdateTaskStatus,
+                                                          onUpdateTaskTitle,
+                                                          onDeleteTask,
+                                                          onDeleteTodolist,
+                                                          onUpdateTodolistTitle
+                                                      }) => {
     const dispatch = useAppDispatch()
 
     useEffect(() => {
@@ -63,23 +66,25 @@ export const TodoList: FC<Todolist> = React.memo(({
 
 
     const taskItems = filterTasks(tasks, filterValue)
-    const tasksForRender = taskItems.map(task => <TaskItem key={task.id}
-                                                           task={task}
-                                                           id={id}
-                                                           onUpdateTaskStatus={onUpdateTaskStatus}
-                                                           onUpdateTaskTitle={onUpdateTaskTitle}
-                                                           onDeleteTask={onDeleteTask}/>)
+    const tasksForRender = taskItems.map(task => <Task key={task.id}
+                                                       task={task}
+                                                       id={id}
+                                                       onUpdateTaskStatus={onUpdateTaskStatus}
+                                                       onUpdateTaskTitle={onUpdateTaskTitle}
+                                                       onDeleteTask={onDeleteTask}/>)
 
     return (
         <>
             <h4>
-            <EditableSpan title={title} onChange={todolistTitleHandler}/>
-                <IconButton aria-label="delete" size="small" color="primary" onClick={deleteTodolistHandler}>
+                <EditableSpan title={title} onChange={todolistTitleHandler} disabled={entityStatus === "loading"}/>
+                <IconButton aria-label="delete" size="small" color="primary"
+                            onClick={deleteTodolistHandler}
+                            disabled={entityStatus === "loading"}>
                     <DeleteForever fontSize="inherit"/>
                 </IconButton>
             </h4>
 
-            <AddItemForm onCreate={createTaskHandler}/>
+            <AddItemForm onCreate={createTaskHandler} disabled={entityStatus === "loading"}/>
             <ul>{tasksForRender}</ul>
             <div>
                 <ToggleButtonGroup

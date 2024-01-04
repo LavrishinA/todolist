@@ -1,7 +1,9 @@
-import {CreateTodolist, DeleteTodolist, SetTodolists} from "./todolist-reducer";
-import {TaskItemArgs, TaskPriorities, TaskStatuses, todolistApi} from "../api/todolistApi";
+import {CreateTodolist, DeleteTodolist, setEntityStatus, SetEntityStatus, SetTodolists} from "./todolist-reducer";
+import {ResponseStatuses, TaskItemArgs, TaskPriorities, TaskStatuses, todolistApi} from "../../api/todolistApi";
 import {Dispatch} from "redux";
-import {Store} from "./store";
+import {Store} from "../../app/store";
+import {setError, SetError, SetStatus, setStatus} from "../../app/app-reducer";
+import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
 
 
 const initialState: Tasks = {}
@@ -27,7 +29,7 @@ export function tasksReducer(task: Tasks = initialState, action: Actions): Tasks
                 ...task,
                 [action.payload.todolistId]: task[action.payload.todolistId].map(t => t.id === action.payload.taskId ? {
                     ...t,
-                    ...action.payload.model
+                    ...action.payload.model,
                 } : t)
             }
         case "todolist/create":
@@ -56,34 +58,76 @@ export const updateTask = (todolistId: string, taskId: string, model: payloadMod
 
 //thunks
 export const thunkSetTasks = (todolistId: string) => (dispatch: Dispatch<Actions>) => {
-    todolistApi.getTasks(todolistId).then(res => dispatch(setTasks(todolistId, res.data.items)))
+    dispatch(setStatus("loading"))
+    todolistApi.getTasks(todolistId).then(res => {
+        dispatch(setTasks(todolistId, res.data.items))
+        dispatch(setStatus("succeeded"))
+    })
 }
 
 export const thunkCreateTask = (todolistId: string, title: string) => (dispatch: Dispatch<Actions>) => {
-    todolistApi.createTask(todolistId, title).then(res => dispatch(createTask(todolistId, res.data.data.item)))
+    dispatch(setStatus("loading"))
+    todolistApi.createTask(todolistId, title).then(res => {
+        if (res.data.resultCode === ResponseStatuses.succeeded) {
+            dispatch(createTask(todolistId, res.data.data.item))
+            dispatch(setStatus("succeeded"))
+        } else {
+            handleServerAppError(res.data, dispatch)
+        }
+
+    }).catch((error) => {
+       handleServerNetworkError(error, dispatch)
+    })
 }
 
 export const thunkDeleteTask = (todolistId: string, taskId: string) => (dispatch: Dispatch<Actions>) => {
-    todolistApi.deleteTask(todolistId, taskId).then(res => dispatch(deleteTask(todolistId, taskId)))
+    dispatch(setStatus("loading"))
+    todolistApi.deleteTask(todolistId, taskId).then(res => {
+        if (res.data.resultCode === ResponseStatuses.succeeded) {
+            dispatch(deleteTask(todolistId, taskId))
+            dispatch(setStatus("succeeded"))
+        } else {
+            handleServerAppError(res.data, dispatch)
+        }
+    }).catch((error) => {
+        handleServerNetworkError(error, dispatch)
+    })
 }
 
 export const thunkUpdateTask = (todolistId: string, taskId: string, model: payloadModel) =>
     (dispatch: Dispatch<Actions>, getState: () => Store) => {
-        const task = getState().tasks[todolistId].find(t => t.id = taskId)
+        dispatch(setStatus("loading"))
+        const task = getState().tasks[todolistId].find(t => t.id === taskId)
 
-        if (task) {
-            const payload = {
-                title: task.title,
-                description: task.description,
-                status: task.status,
-                priority: task.priority,
-                startDate: task.startDate,
-                deadline: task.deadline,
-                ...model
-
-            }
-            todolistApi.updateTask(todolistId, taskId, payload).then(res => dispatch(updateTask(todolistId, taskId, payload)))
+        if (!task) {
+            //throw new Error("task not found in the state");
+            console.warn('task not found in the state')
+            return
         }
+
+        const payload = {
+            title: task.title,
+            description: task.description,
+            status: task.status,
+            priority: task.priority,
+            startDate: task.startDate,
+            deadline: task.deadline,
+            ...model
+
+        }
+
+        todolistApi.updateTask(todolistId, taskId, payload).then(res => {
+            if (res.data.resultCode === ResponseStatuses.succeeded) {
+                dispatch(updateTask(todolistId, taskId, payload))
+                dispatch(setStatus("succeeded"))
+            } else {
+                handleServerAppError(res.data, dispatch)
+            }
+        }).catch((error) => {
+            handleServerNetworkError(error, dispatch)
+
+        })
+
     }
 
 export type Tasks = {
@@ -99,7 +143,18 @@ export type payloadModel = {
     deadline?: Date | null
 }
 
-type Actions = DeleteTask | CreateTask | UpdateTask | SetTasks | CreateTodolist | DeleteTodolist | SetTodolists
+type Actions =
+    DeleteTask
+    | CreateTask
+    | UpdateTask
+    | SetTasks
+    | CreateTodolist
+    | DeleteTodolist
+    | SetTodolists
+    | SetStatus
+    | SetError
+    | SetEntityStatus
+
 type DeleteTask = ReturnType<typeof deleteTask>
 type CreateTask = ReturnType<typeof createTask>
 type UpdateTask = ReturnType<typeof updateTask>

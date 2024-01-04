@@ -1,8 +1,8 @@
 import {Meta, StoryObj} from "@storybook/react";
-import {AddItemForm} from "../AddItemForm";
+import {AddItemForm} from "../components/AddItemForm/AddItemForm";
 
 const meta: Meta<typeof AddItemForm> = {
-    title: 'Todolist/AddItemForm',
+    title: 'TodolistsList/AddItemForm',
     component: AddItemForm,
     parameters: {
         layout: 'centered',

@@ -94,3 +94,8 @@ export enum TaskPriorities {
     Urgently = 3,
     Later = 4
 }
+
+export enum ResponseStatuses {
+    succeeded = 0,
+    failed = 1
+}
