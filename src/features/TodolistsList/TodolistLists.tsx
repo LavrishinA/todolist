@@ -14,15 +14,18 @@ import {AddItemForm} from "../../components/AddItemForm/AddItemForm";
 import {Todolist} from "./Todolist/Todolist";
 import Paper from "@mui/material/Paper/Paper";
 import Grid from "@mui/material/Grid/Grid";
+import {Navigate} from "react-router-dom";
 
 
 export const TodolistLists: FC = () => {
 
     const todolists = useAppSelector(state => state.todolists)
     const tasks = useAppSelector(state => state.tasks)
+    const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
+        if(!isLoggedIn) return
         dispatch(thunkSetTodolist())
     }, [dispatch]);
 
@@ -54,6 +57,9 @@ export const TodolistLists: FC = () => {
         dispatch(thunkDeleteTodolist(todolistId))
     }, [dispatch])
 
+    if(!isLoggedIn) {
+        return <Navigate to={'/login'}/>
+    }
 
     return (
         <Grid container spacing={{xs: 2, md: 2}} columns={{xs: 4, sm: 8, md: 12}}>

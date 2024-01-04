@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {TodolistLists} from "../features/TodolistsList/TodolistLists";
 import Container from '@mui/material/Container';
 import Toolbar from '@mui/material/Toolbar';
@@ -9,14 +9,35 @@ import Button from '@mui/material/Button';
 import MenuIcon from '@mui/icons-material/Menu';
 import './App.css';
 import LinearProgress from '@mui/material/LinearProgress';
-import {useAppSelector} from "./store";
+import {useAppDispatch, useAppSelector} from "./store";
 import {ErrorSnackbar} from "../components/ErrorSnackbar/ErrorSnackbar";
 import {Login} from "../features/Login/login";
 import {Navigate, Route, Routes} from "react-router-dom";
+import {logout, me} from "../features/Login/auth-reducer";
+import CircularProgress from "@mui/material/CircularProgress";
 
 
 export function App() {
     const status = useAppSelector(state => state.app.status)
+    const isInitialized = useAppSelector(state => state.app.isInitialized)
+    const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        dispatch(me())
+    }, [dispatch]);
+
+    const logoutHandler = () => {
+        dispatch(logout())
+    }
+
+    if (!isInitialized) {
+        return <div
+            style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
+            <CircularProgress/>
+        </div>
+    }
+
     return (
         <div className={"app"}>
             <AppBar position="static" sx={{position: "relative", marginBottom: "1rem"}}>
@@ -33,7 +54,7 @@ export function App() {
                     <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
                         News
                     </Typography>
-                    <Button color="inherit">Login</Button>
+                    {isLoggedIn && <Button onClick={logoutHandler} color="inherit">Logout</Button>}
                 </Toolbar>
                 {status === "loading" &&
                     <LinearProgress color="secondary" sx={{position: "absolute", top: "100%", left: 0, right: 0}}/>}

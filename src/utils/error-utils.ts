@@ -1,7 +1,6 @@
 import {Dispatch} from "redux";
 import {setError, SetError, setStatus, SetStatus} from "../app/app-reducer";
 import {TodolistResponse} from "../api/todolistApi";
-import {AxiosError} from "axios";
 
 export const handleServerAppError = (data: TodolistResponse, dispatch: ErrorUtilsDispatchType) => {
 
@@ -13,7 +12,7 @@ export const handleServerAppError = (data: TodolistResponse, dispatch: ErrorUtil
     dispatch(setStatus('failed'))
 }
 
-export const handleServerNetworkError = (error: AxiosError, dispatch: ErrorUtilsDispatchType) => {
+export const handleServerNetworkError = (error: { message: string }, dispatch: ErrorUtilsDispatchType) => {
     dispatch(setError(error.message))
     dispatch(setStatus('failed'))
 }

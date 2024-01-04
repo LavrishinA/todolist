@@ -3,6 +3,7 @@ import {Dispatch} from "redux";
 import {RequestStatusType, setStatus, SetStatus} from "../../app/app-reducer";
 import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
 
+const initialState: TodolistUI[] = []
 
 export function todolistsReducer(todolists: TodolistUI[] = initialState, action: Actions): TodolistUI[] {
     switch (action.type) {
@@ -22,6 +23,8 @@ export function todolistsReducer(todolists: TodolistUI[] = initialState, action:
             return todolists.map(tl => tl.id === action.todoListId ? {...tl, filter: action.filter} : tl)
         case "todolist/set-entity-status":
             return todolists.map(tl => tl.id === action.todoListId ? {...tl, entityStatus: action.entityStatus} : tl)
+        case "todolist/clear-data":
+            return []
         default:
             return todolists
     }
@@ -45,6 +48,8 @@ export const setTodolists = (todolists: TodolistItemArgs[]) =>
 
 export const setEntityStatus = (todoListId: string, entityStatus: RequestStatusType) =>
     ({type: "todolist/set-entity-status", todoListId, entityStatus} as const)
+
+export const clearData = () => ({type: 'todolist/clear-data'} as const)
 
 //thunks
 export const thunkSetTodolist = () => (dispatch: Dispatch<Actions>) => {
@@ -107,7 +112,7 @@ export type TodolistUI = TodolistItemArgs & {
     filter: FilterType
     entityStatus: RequestStatusType
 }
-const initialState: TodolistUI[] = []
+
 
 export type Actions = CreateTodolist
     | DeleteTodolist
@@ -116,11 +121,12 @@ export type Actions = CreateTodolist
     | SetTodolists
     | SetStatus
     | SetEntityStatus
-
+    | ClearData
 export type SetTodolists = ReturnType<typeof setTodolists>
 export type CreateTodolist = ReturnType<typeof createTodolist>
 export type DeleteTodolist = ReturnType<typeof deleteTodolist>
 export type SetEntityStatus = ReturnType<typeof setEntityStatus>
+export type ClearData = ReturnType<typeof clearData>
 type UpdateTodolistTitle = ReturnType<typeof updateTodolistTitle>
 type UpdateTodolistFilter = ReturnType<typeof updateTodolistFilter>
 

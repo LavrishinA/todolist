@@ -1,4 +1,11 @@
-import {CreateTodolist, DeleteTodolist, setEntityStatus, SetEntityStatus, SetTodolists} from "./todolist-reducer";
+import {
+    ClearData,
+    CreateTodolist,
+    DeleteTodolist,
+    setEntityStatus,
+    SetEntityStatus,
+    SetTodolists
+} from "./todolist-reducer";
 import {ResponseStatuses, TaskItemArgs, TaskPriorities, TaskStatuses, todolistApi} from "../../api/todolistApi";
 import {Dispatch} from "redux";
 import {Store} from "../../app/store";
@@ -38,6 +45,8 @@ export function tasksReducer(task: Tasks = initialState, action: Actions): Tasks
             const copyTask = {...task}
             delete copyTask[action.todoListId]
             return {...copyTask}
+        case "todolist/clear-data":
+            return {}
         default:
             return task
     }
@@ -76,7 +85,7 @@ export const thunkCreateTask = (todolistId: string, title: string) => (dispatch:
         }
 
     }).catch((error) => {
-       handleServerNetworkError(error, dispatch)
+        handleServerNetworkError(error, dispatch)
     })
 }
 
@@ -152,8 +161,8 @@ type Actions =
     | DeleteTodolist
     | SetTodolists
     | SetStatus
-    | SetError
     | SetEntityStatus
+    | ClearData
 
 type DeleteTask = ReturnType<typeof deleteTask>
 type CreateTask = ReturnType<typeof createTask>
