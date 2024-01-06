@@ -1,17 +1,16 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from "react";
-import IconButton from "@mui/material/IconButton/";
-import TextField from "@mui/material/TextField";
-import PlaylistAddSharp from '@mui/icons-material/PlaylistAddSharp';
+import React, { ChangeEvent, KeyboardEvent, useState } from "react"
+import IconButton from "@mui/material/IconButton/"
+import TextField from "@mui/material/TextField"
+import PlaylistAddSharp from "@mui/icons-material/PlaylistAddSharp"
 
 export type AddItemFormPropsType = {
     onCreate: (title: string) => void
     disabled?: boolean
 }
 
-export const AddItemForm: React.FC<AddItemFormPropsType> = React.memo(({onCreate, disabled}) => {
+export const AddItemForm: React.FC<AddItemFormPropsType> = React.memo(({ onCreate, disabled }) => {
     const [itemTitle, setItemTitle] = useState("")
     const [error, setError] = useState<null | string>(null)
-
 
     function inputValueHandler(e: ChangeEvent<HTMLInputElement>) {
         setItemTitle(e.currentTarget.value)
@@ -33,7 +32,6 @@ export const AddItemForm: React.FC<AddItemFormPropsType> = React.memo(({onCreate
         e.key === "Enter" && createItemHandler()
     }
 
-
     return (
         <div>
             <TextField
@@ -49,10 +47,9 @@ export const AddItemForm: React.FC<AddItemFormPropsType> = React.memo(({onCreate
                 disabled={disabled}
             />
 
-            <IconButton aria-label="add" size="small" color="primary" onClick={createItemHandler} >
-                <PlaylistAddSharp fontSize="medium"/>
+            <IconButton aria-label="add" size="small" color="primary" onClick={createItemHandler}>
+                <PlaylistAddSharp fontSize="medium" />
             </IconButton>
         </div>
-    );
-});
-
+    )
+})

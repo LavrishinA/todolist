@@ -1,20 +1,18 @@
-import {Dispatch} from "redux";
-import {setError, SetError, setStatus, SetStatus} from "../app/app-reducer";
-import {TodolistResponse} from "../api/todolistApi";
+import { Dispatch } from "redux"
+import { TodolistResponse } from "api/todolistApi"
+import { appActions } from "app/app-slice"
+import { AppDispatch } from "app/store"
 
-export const handleServerAppError = (data: TodolistResponse, dispatch: ErrorUtilsDispatchType) => {
-
+export const handleServerAppError = (data: TodolistResponse, dispatch: AppDispatch) => {
     if (data.messages.length) {
-        dispatch(setError(data.messages[0]))
+        dispatch(appActions.setError({ error: data.messages[0] }))
     } else {
-        dispatch(setError('Some error occurred'))
+        dispatch(appActions.setError({ error: "Some error occurred" }))
     }
-    dispatch(setStatus('failed'))
+    dispatch(appActions.setStatus({ status: "failed" }))
 }
 
-export const handleServerNetworkError = (error: { message: string }, dispatch: ErrorUtilsDispatchType) => {
-    dispatch(setError(error.message))
-    dispatch(setStatus('failed'))
+export const handleServerNetworkError = (error: { message: string }, dispatch: AppDispatch) => {
+    dispatch(appActions.setError({ error: error.message }))
+    dispatch(appActions.setStatus({ status: "failed" }))
 }
-
-type ErrorUtilsDispatchType = Dispatch<SetError | SetStatus>

@@ -1,12 +1,17 @@
-import {Tasks, tasksReducer} from "../features/TodolistsList/task-reducer";
-import {createTodolist, TodolistUI, todolistsReducer, FilterType} from "../features/TodolistsList/todolist-reducer";
-
+import { Tasks, tasksReducer } from "../features/TodolistsList/task-reducer"
+import { createTodolist, TodolistUI, todolistsReducer, FilterType } from "../features/TodolistsList/todolist-reducer"
 
 test("ids should be equals", () => {
     const task: Tasks = {}
     const todolists: TodolistUI[] = []
 
-    const newTodolist = {id: "todolistId3", title: "What to buy", addedDate: new Date(), order: 3, filter: FilterType.All}
+    const newTodolist = {
+        id: "todolistId3",
+        title: "What to buy",
+        addedDate: new Date(),
+        order: 3,
+        filter: FilterType.All,
+    }
     const action = createTodolist(newTodolist)
     const tasksAfterReduce = tasksReducer(task, action)
     const todolistsAfterReduce = todolistsReducer(todolists, action)

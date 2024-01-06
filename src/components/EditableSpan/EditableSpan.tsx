@@ -1,5 +1,5 @@
-import React, {ChangeEvent, useState} from "react";
-import TextField from "@mui/material/TextField";
+import React, { ChangeEvent, useState } from "react"
+import TextField from "@mui/material/TextField"
 
 type EditableSpanPropsType = {
     title: string
@@ -8,7 +8,7 @@ type EditableSpanPropsType = {
     disabled?: boolean
 }
 
-export const EditableSpan: React.FC<EditableSpanPropsType> = React.memo(({title, onChange, disabled}) => {
+export const EditableSpan: React.FC<EditableSpanPropsType> = React.memo(({ title, onChange, disabled }) => {
     const [isEditMode, setIsEditMode] = useState(false)
     const [inputValue, setInputValue] = useState("")
 
@@ -28,18 +28,20 @@ export const EditableSpan: React.FC<EditableSpanPropsType> = React.memo(({title,
 
     return (
         <>
-            {isEditMode
-                ? <TextField variant="standard"
-                             size="small"
-                             helperText="Change title"
-                             value={inputValue}
-                             onChange={inputValueHandler}
-                             onBlur={deactivateChangeModeHandler}
-                             autoFocus
-                             disabled={disabled}/>
-                : <span onDoubleClick={activeChangeModeHandler}> {title} </span>}
+            {isEditMode ? (
+                <TextField
+                    variant="standard"
+                    size="small"
+                    helperText="Change title"
+                    value={inputValue}
+                    onChange={inputValueHandler}
+                    onBlur={deactivateChangeModeHandler}
+                    autoFocus
+                    disabled={disabled}
+                />
+            ) : (
+                <span onDoubleClick={activeChangeModeHandler}> {title} </span>
+            )}
         </>
-
-    );
-});
-
+    )
+})
