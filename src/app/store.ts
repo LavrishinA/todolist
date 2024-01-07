@@ -1,5 +1,5 @@
-import { tasksReducer } from "features/TodolistsList/task-reducer"
-import { todolistReducer } from "features/TodolistsList/todolist-reducer"
+import { taskReducer } from "features/TodolistsList/task-slice"
+import { todolistReducer } from "features/TodolistsList/todolist-slice"
 import { appReducer } from "app/app-slice"
 import { authReducer } from "features/Login/auth-slice"
 import { ThunkAction, ThunkDispatch } from "redux-thunk"
@@ -8,7 +8,7 @@ import { configureStore, UnknownAction } from "@reduxjs/toolkit"
 
 export const store = configureStore({
     reducer: {
-        tasks: tasksReducer,
+        tasks: taskReducer,
         todolists: todolistReducer,
         app: appReducer,
         auth: authReducer,

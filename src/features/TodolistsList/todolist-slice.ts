@@ -16,7 +16,7 @@ const slice = createSlice({
     name: "todolist",
     initialState,
     reducers: {
-        initialize: (state, action: PayloadAction<TodolistItemArgs[]>) => {
+        read: (state, action: PayloadAction<TodolistItemArgs[]>) => {
             // return action.payload.map((tl) => ({ ...tl, filter: FilterType.All, entityStatus: "idle" }))
             action.payload.forEach((tl) => state.push({ ...tl, filter: FilterType.All, entityStatus: "idle" }))
         },
@@ -39,6 +39,9 @@ const slice = createSlice({
             const index = state.findIndex((todo) => todo.id === action.payload.id)
             if (index !== -1) state[index].filter = action.payload.filter
         },
+        clearData: () => {
+            return []
+        },
     },
 })
 
@@ -49,7 +52,7 @@ export const todolistActions = slice.actions
 export const thunkSetTodolist = (): AppThunk => (dispatch: AppDispatch) => {
     dispatch(appActions.setStatus({ status: "loading" }))
     todolistApi.getTodolists().then((res) => {
-        dispatch(todolistActions.initialize(res.data))
+        dispatch(todolistActions.read(res.data))
         dispatch(appActions.setStatus({ status: "succeeded" }))
     })
 }

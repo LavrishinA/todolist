@@ -1,6 +1,7 @@
-import { createTask, deleteTask, Tasks, tasksReducer, updateTask } from "features/TodolistsList/task-reducer"
-import { createTodolist } from "features/TodolistsList/todolist-reducer"
+import { Tasks, taskReducer, taskActions } from "features/TodolistsList/task-slice"
+
 import { TaskPriorities, TaskStatuses } from "api/todolistApi"
+import { todolistActions } from "features/TodolistsList/todolist-slice"
 
 let task: Tasks
 
@@ -86,7 +87,7 @@ beforeEach(() => {
 })
 
 test("Task should be deleted", () => {
-    const tasksAfterReduce = tasksReducer(task, deleteTask("todolist2", "2"))
+    const tasksAfterReduce = taskReducer(task, taskActions.delete({ id: "todolist2", taskId: "2" }))
 
     expect(tasksAfterReduce["todolist1"].length).toBe(3)
     expect(tasksAfterReduce["todolist2"].length).toBe(2)
@@ -94,19 +95,22 @@ test("Task should be deleted", () => {
 })
 
 test("Task should be added", () => {
-    const tasksAfterReduce = tasksReducer(
+    const tasksAfterReduce = taskReducer(
         task,
-        createTask("todolist2", {
-            id: "d3c4ef92-2d05-4670-bb9c-6f4b98c89ff6",
-            title: "New task title",
-            description: null,
-            todoListId: "38775f03-f52e-4c4f-a7dd-4c3fd8ced284",
-            order: -3,
-            status: 0,
-            priority: 1,
-            startDate: null,
-            deadline: null,
-            addedDate: new Date(),
+        taskActions.create({
+            id: "todolist2",
+            task: {
+                id: "d3c4ef92-2d05-4670-bb9c-6f4b98c89ff6",
+                title: "New task title",
+                description: null,
+                todoListId: "38775f03-f52e-4c4f-a7dd-4c3fd8ced284",
+                order: -3,
+                status: 0,
+                priority: 1,
+                startDate: null,
+                deadline: null,
+                addedDate: new Date(),
+            },
         }),
     )
 
@@ -118,14 +122,20 @@ test("Task should be added", () => {
 })
 
 test("Task status should be changed", () => {
-    const tasksAfterReduce = tasksReducer(task, updateTask("todolist2", "2", { status: TaskStatuses.New }))
+    const tasksAfterReduce = taskReducer(
+        task,
+        taskActions.update({ id: "todolist2", taskId: "2", task: { status: TaskStatuses.New } }),
+    )
 
     expect(tasksAfterReduce["todolist2"][1].status).toBe(TaskStatuses.New)
     expect(tasksAfterReduce["todolist1"][1].status).toBe(TaskStatuses.Completed)
 })
 
 test("Task name should be changed", () => {
-    const tasksAfterReduce = tasksReducer(task, updateTask("todolist2", "2", { title: "Task name changed" }))
+    const tasksAfterReduce = taskReducer(
+        task,
+        taskActions.update({ id: "todolist2", taskId: "2", task: { title: "Task name changed" } }),
+    )
 
     expect(tasksAfterReduce["todolist2"][1].title).toBe("Task name changed")
     expect(tasksAfterReduce["todolist1"][1].title).toBe("JS")
@@ -134,8 +144,7 @@ test("Task name should be changed", () => {
 test("New array should be added when new todolist is added", () => {
     const newTodolist = { id: "todolistId3", title: "What to buy", addedDate: new Date(), order: 3 }
 
-    const action = createTodolist(newTodolist)
-    const tasksAfterReduce = tasksReducer(task, action)
+    const tasksAfterReduce = taskReducer(task, todolistActions.create(newTodolist))
 
     const keys = Object.keys(tasksAfterReduce)
     const newKey = keys?.find((k) => k !== "todolist1" && k !== "todolist2")

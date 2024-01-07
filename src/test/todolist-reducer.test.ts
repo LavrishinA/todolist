@@ -1,14 +1,5 @@
 import { v1 } from "uuid"
-import {
-    createTodolist,
-    deleteTodolist,
-    FilterType,
-    setTodolists,
-    todolistsReducer,
-    TodolistUI,
-    updateTodolistFilter,
-    updateTodolistTitle,
-} from "../features/TodolistsList/todolist-reducer"
+import { FilterType, todolistActions, todolistReducer, TodolistUI } from "features/TodolistsList/todolist-slice"
 
 let todolist1ID: string
 let todolist2ID: string
@@ -45,7 +36,8 @@ test("New todolist should be added", () => {
         order: 3,
         filter: FilterType.All,
     }
-    const todolistsAfterReduce = todolistsReducer(todolists, createTodolist(newTodolist))
+
+    const todolistsAfterReduce = todolistReducer(todolists, todolistActions.create(newTodolist))
 
     expect(todolistsAfterReduce.length).toBe(3)
     expect(todolistsAfterReduce[0].filter).toBe(FilterType.All)
@@ -53,28 +45,34 @@ test("New todolist should be added", () => {
 })
 
 test("todolist should be removed todolist", () => {
-    const todolistsAfterReduce = todolistsReducer(todolists, deleteTodolist(todolist1ID))
+    const todolistsAfterReduce = todolistReducer(todolists, todolistActions.delete(todolist1ID))
 
     expect(todolistsAfterReduce.length).toBe(1)
     expect(todolistsAfterReduce[0].id).toBe(todolist2ID)
 })
 
 test("todolist title should be changed", () => {
-    const todolistsAfterReduce = todolistsReducer(todolists, updateTodolistTitle(todolist2ID, "What to pay"))
+    const todolistsAfterReduce = todolistReducer(
+        todolists,
+        todolistActions.updateTitle({ id: todolist2ID, title: "What to pay" }),
+    )
 
     expect(todolistsAfterReduce[0].title).toBe("What to learn")
     expect(todolistsAfterReduce[1].title).toBe("What to pay")
 })
 
 test("todolist filter should be changed", () => {
-    const todolistsAfterReduce = todolistsReducer(todolists, updateTodolistFilter(todolist2ID, FilterType.Active))
+    const todolistsAfterReduce = todolistReducer(
+        todolists,
+        todolistActions.updateFilter({ id: todolist2ID, filter: FilterType.Active }),
+    )
     expect(todolistsAfterReduce[0].filter).toBe(FilterType.All)
     expect(todolistsAfterReduce[1].filter).toBe(FilterType.Active)
 })
 
 test("todolists array should be not empty", () => {
     const initialState: TodolistUI[] = []
-    const todolistsAfterReduce = todolistsReducer(initialState, setTodolists(todolists))
+    const todolistsAfterReduce = todolistReducer(initialState, todolistActions.read(todolists))
     expect(initialState.length).toBe(0)
     expect(todolistsAfterReduce.length).toBe(2)
 })

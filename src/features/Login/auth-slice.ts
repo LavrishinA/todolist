@@ -1,7 +1,7 @@
 import { handleServerAppError, handleServerNetworkError } from "utils/error-utils"
 import { authApi, ResponseStatuses } from "api/todolistApi"
 import { LoginParams } from "./login"
-import { clearData } from "../TodolistsList/todolist-reducer"
+import { todolistActions } from "features/TodolistsList/todolist-slice"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { AppDispatch, AppThunk } from "app/store"
 import { appActions } from "app/app-slice"
@@ -65,7 +65,7 @@ export const logout = (): AppThunk => async (dispatch: AppDispatch) => {
         if (res.data.resultCode === ResponseStatuses.succeeded) {
             dispatch(authActions.setIsLoggedIn({ isLoggedIn: false }))
             dispatch(appActions.setStatus({ status: "succeeded" }))
-            dispatch(clearData())
+            dispatch(todolistActions.clearData())
         } else {
             handleServerAppError(res.data, dispatch)
         }

@@ -7,8 +7,8 @@ import {
     thunkSetTodolist,
     thunkUpdateTodolist,
     todolistActions,
-} from "./todolist-reducer"
-import { thunkCreateTask, thunkDeleteTask, thunkUpdateTask } from "./task-reducer"
+} from "features/TodolistsList/todolist-slice"
+import { thunkCreateTask, thunkDeleteTask, thunkUpdateTask } from "features/TodolistsList/task-slice"
 import { TaskStatuses } from "api/todolistApi"
 import { AddItemForm } from "components/AddItemForm/AddItemForm"
 import { Todolist } from "./Todolist/Todolist"
@@ -25,7 +25,7 @@ export const TodolistLists: FC = () => {
     useEffect(() => {
         if (!isLoggedIn) return
         dispatch(thunkSetTodolist())
-    }, [dispatch])
+    }, [dispatch, isLoggedIn])
 
     //CRUD TASK
     const createTaskHandler = useCallback(
