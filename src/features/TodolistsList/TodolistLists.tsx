@@ -15,11 +15,14 @@ import { Todolist } from "./Todolist/Todolist"
 import Paper from "@mui/material/Paper/Paper"
 import Grid from "@mui/material/Grid/Grid"
 import { Navigate } from "react-router-dom"
+import { selectIsLoggedIn } from "features/Login/auth-selectors"
+import { selectTodolist } from "features/TodolistsList/todolist-selectors"
+import { selectTask } from "features/TodolistsList/task-selectors"
 
 export const TodolistLists: FC = () => {
-    const todolists = useAppSelector((state) => state.todolists)
-    const tasks = useAppSelector((state) => state.tasks)
-    const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn)
+    const todolists = useAppSelector(selectTodolist)
+    const tasks = useAppSelector(selectTask)
+    const isLoggedIn = useAppSelector(selectIsLoggedIn)
     const dispatch = useAppDispatch()
 
     useEffect(() => {

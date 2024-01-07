@@ -1,4 +1,3 @@
-import { Dispatch } from "redux"
 import { TodolistResponse } from "api/todolistApi"
 import { appActions } from "app/app-slice"
 import { AppDispatch } from "app/store"

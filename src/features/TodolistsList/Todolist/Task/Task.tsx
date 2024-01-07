@@ -30,7 +30,7 @@ export const Task: FC<TaskItemType> = React.memo(
 
         const deleteTaskHandler = () => {
             setIsLoading(true)
-            const res = onDeleteTask(id, task.id)
+            onDeleteTask(id, task.id)
         }
 
         return (

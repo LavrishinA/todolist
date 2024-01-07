@@ -8,9 +8,10 @@ import FormLabel from "@mui/material/FormLabel"
 import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
 import { useFormik } from "formik"
-import { useAppDispatch, useAppSelector } from "../../app/store"
+import { useAppDispatch, useAppSelector } from "app/store"
 import { login } from "features/Login/auth-slice"
 import { Navigate } from "react-router-dom"
+import { selectIsLoggedIn } from "features/Login/auth-selectors"
 
 export type LoginParams = {
     email: string
@@ -26,7 +27,7 @@ type FormikErrorType = {
 
 export const Login = () => {
     const dispatch = useAppDispatch()
-    const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn)
+    const isLoggedIn = useAppSelector(selectIsLoggedIn)
 
     const formik = useFormik({
         initialValues: {
@@ -65,7 +66,7 @@ export const Login = () => {
                     <FormLabel>
                         <p>
                             To log in get registered
-                            <a href={"https://social-network.samuraijs.com/"} target={"_blank"}>
+                            <a href={"https://social-network.samuraijs.com/"} target={"_blank"} rel="noreferrer">
                                 {" "}
                                 here
                             </a>
