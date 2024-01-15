@@ -1,4 +1,4 @@
-import { Tasks, taskReducer, taskActions } from "features/TodolistsList/task-slice"
+import { Tasks, taskReducer, taskActions, tasksThunks } from "features/TodolistsList/task-slice"
 
 import { TaskPriorities, TaskStatuses } from "api/todolistApi"
 import { todolistActions } from "features/TodolistsList/todolist-slice"
@@ -87,7 +87,13 @@ beforeEach(() => {
 })
 
 test("Task should be deleted", () => {
-    const tasksAfterReduce = taskReducer(task, taskActions.delete({ id: "todolist2", taskId: "2" }))
+    const tasksAfterReduce = taskReducer(
+        task,
+        tasksThunks.deleteTask.fulfilled({ id: "todolist2", taskId: "2" }, "requestId", {
+            id: "todolist2",
+            taskId: "2",
+        }),
+    )
 
     expect(tasksAfterReduce["todolist1"].length).toBe(3)
     expect(tasksAfterReduce["todolist2"].length).toBe(2)
@@ -97,13 +103,12 @@ test("Task should be deleted", () => {
 test("Task should be added", () => {
     const tasksAfterReduce = taskReducer(
         task,
-        taskActions.create({
-            id: "todolist2",
-            task: {
+        tasksThunks.createTask.fulfilled(
+            {
                 id: "d3c4ef92-2d05-4670-bb9c-6f4b98c89ff6",
                 title: "New task title",
                 description: null,
-                todoListId: "38775f03-f52e-4c4f-a7dd-4c3fd8ced284",
+                todoListId: "todolist2",
                 order: -3,
                 status: 0,
                 priority: 1,
@@ -111,7 +116,9 @@ test("Task should be added", () => {
                 deadline: null,
                 addedDate: new Date(),
             },
-        }),
+            "requestId",
+            { id: "todolist2", title: "New task title" },
+        ),
     )
 
     expect(tasksAfterReduce["todolist1"].length).toBe(3)
@@ -154,4 +161,35 @@ test("New array should be added when new todolist is added", () => {
 
     expect(tasksAfterReduce[newKey].length).toBe(0)
     expect(tasksAfterReduce[newKey]).toEqual([])
+})
+
+test("tasks should be added for todolist", () => {
+    // 1 var
+    const action = tasksThunks.fetchTasks.fulfilled(
+        { id: "todolist1", tasks: task["todolist1"] },
+        "requestId",
+        "todolistId1",
+    )
+
+    // 2 var
+    // type ActionType = {
+    //     type: string
+    //     payload: { tasks: Tasks[]; todolistId: string }
+    // }
+
+    // const action: ActionType = {
+    //     type: tasksThunks.fetchTasks.fulfilled.type,
+    //     payload: { todolistId: "todolistId1", tasks: task["todolistId1"] },
+    // }
+
+    const endState = taskReducer(
+        {
+            todolist1: [],
+            todolist2: [],
+        },
+        action,
+    )
+
+    expect(endState["todolist1"].length).toBe(3)
+    expect(endState["todolist2"].length).toBe(0)
 })

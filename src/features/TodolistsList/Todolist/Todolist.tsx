@@ -8,7 +8,7 @@ import DeleteForever from "@mui/icons-material/DeleteForever"
 import ToggleButton from "@mui/material/ToggleButton"
 import { TaskItemArgs, TaskStatuses } from "api/todolistApi"
 import { useAppDispatch } from "app/store"
-import { thunkSetTasks } from "features/TodolistsList/task-slice"
+import { tasksThunks } from "features/TodolistsList/task-slice"
 import { FilterType } from "features/TodolistsList/todolist-slice"
 import { RequestStatusType } from "app/app-slice"
 
@@ -52,7 +52,7 @@ export const Todolist: FC<TodolistArgs> = React.memo(
         const dispatch = useAppDispatch()
 
         useEffect(() => {
-            dispatch(thunkSetTasks(id))
+            dispatch(tasksThunks.fetchTasks(id))
         }, [dispatch, id])
 
         const filterAllHandler = useCallback(() => onUpdateFilter(id, FilterType.All), [id, onUpdateFilter])

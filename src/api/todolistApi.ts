@@ -44,11 +44,7 @@ export const todolistApi = {
     createTask(todolistId: string, title: string) {
         return instance.post<
             TodolistResponse<{ item: TaskItemArgs }>,
-            AxiosResponse<
-                TodolistResponse<{
-                    item: TaskItemArgs
-                }>
-            >,
+            AxiosResponse<TodolistResponse<{ item: TaskItemArgs }>>,
             { title: string }
         >(`/todo-lists/${todolistId}/tasks`, { title })
     },
@@ -67,6 +63,7 @@ export const todolistApi = {
         >(`/todo-lists/${todolistId}/tasks/${taskId}`, payload)
     },
 }
+
 export type User = {
     id: number
     email: string

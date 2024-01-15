@@ -8,7 +8,7 @@ import {
     thunkUpdateTodolist,
     todolistActions,
 } from "features/TodolistsList/todolist-slice"
-import { thunkCreateTask, thunkDeleteTask, thunkUpdateTask } from "features/TodolistsList/task-slice"
+import { tasksThunks } from "features/TodolistsList/task-slice"
 import { TaskStatuses } from "api/todolistApi"
 import { AddItemForm } from "components/AddItemForm/AddItemForm"
 import { Todolist } from "./Todolist/Todolist"
@@ -32,26 +32,26 @@ export const TodolistLists: FC = () => {
 
     //CRUD TASK
     const createTaskHandler = useCallback(
-        (todoListId: string, title: string) => {
-            dispatch(thunkCreateTask(todoListId, title))
+        (id: string, title: string) => {
+            dispatch(tasksThunks.createTask({ id, title }))
         },
         [dispatch],
     )
     const updateTaskStatusHandler = useCallback(
-        (todoListId: string, taskId: string, status: TaskStatuses) => {
-            dispatch(thunkUpdateTask(todoListId, taskId, { status }))
+        (id: string, taskId: string, status: TaskStatuses) => {
+            dispatch(tasksThunks.updateTask({ id, taskId, task: { status } }))
         },
         [dispatch],
     )
     const updateTaskTitleHandler = useCallback(
-        (todoListId: string, taskId: string, title: string) => {
-            dispatch(thunkUpdateTask(todoListId, taskId, { title }))
+        (id: string, taskId: string, title: string) => {
+            dispatch(tasksThunks.updateTask({ id, taskId, task: { title } }))
         },
         [dispatch],
     )
     const deleteTaskHandler = useCallback(
-        (todoListId: string, taskId: string) => {
-            dispatch(thunkDeleteTask(todoListId, taskId))
+        (id: string, taskId: string) => {
+            dispatch(tasksThunks.deleteTask({ id, taskId }))
         },
         [dispatch],
     )
