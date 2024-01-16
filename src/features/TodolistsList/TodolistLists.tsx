@@ -1,13 +1,6 @@
 import React, { FC, useCallback, useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "app/store"
-import {
-    FilterType,
-    thunkCreateTodolist,
-    thunkDeleteTodolist,
-    thunkSetTodolist,
-    thunkUpdateTodolist,
-    todolistActions,
-} from "features/TodolistsList/todolist-slice"
+import { FilterType, todolistActions } from "features/TodolistsList/todolist-slice"
 import { tasksThunks } from "features/TodolistsList/task-slice"
 import { TaskStatuses } from "api/todolistApi"
 import { AddItemForm } from "components/AddItemForm/AddItemForm"
@@ -27,7 +20,7 @@ export const TodolistLists: FC = () => {
 
     useEffect(() => {
         if (!isLoggedIn) return
-        dispatch(thunkSetTodolist())
+        dispatch(todolistActions.fetchTodolists())
     }, [dispatch, isLoggedIn])
 
     //CRUD TASK
@@ -59,7 +52,7 @@ export const TodolistLists: FC = () => {
     //CRUD TODOLIST
     const createTodolistHandler = useCallback(
         (title: string) => {
-            dispatch(thunkCreateTodolist(title))
+            dispatch(todolistActions.createTodolist(title))
         },
         [dispatch],
     )
@@ -70,14 +63,14 @@ export const TodolistLists: FC = () => {
         [dispatch],
     )
     const updateTodolistTitleHandler = useCallback(
-        (todolistId: string, title: string) => {
-            dispatch(thunkUpdateTodolist(todolistId, title))
+        (id: string, title: string) => {
+            dispatch(todolistActions.updateTodolist({ id, title }))
         },
         [dispatch],
     )
     const deleteTodolistHandler = useCallback(
         (todolistId: string) => {
-            dispatch(thunkDeleteTodolist(todolistId))
+            dispatch(todolistActions.deleteTodolist(todolistId))
         },
         [dispatch],
     )

@@ -37,7 +37,10 @@ test("New todolist should be added", () => {
         filter: FilterType.All,
     }
 
-    const todolistsAfterReduce = todolistReducer(todolists, todolistActions.create(newTodolist))
+    const todolistsAfterReduce = todolistReducer(
+        todolists,
+        todolistActions.createTodolist.fulfilled(newTodolist, "requestId", "What to buy"),
+    )
 
     expect(todolistsAfterReduce.length).toBe(3)
     expect(todolistsAfterReduce[0].filter).toBe(FilterType.All)
@@ -45,7 +48,7 @@ test("New todolist should be added", () => {
 })
 
 test("todolist should be removed todolist", () => {
-    const todolistsAfterReduce = todolistReducer(todolists, todolistActions.delete(todolist1ID))
+    const todolistsAfterReduce = todolistReducer(todolists, todolistActions.deleteTodolist.fulfilled(todolist1ID, "requstId", todolist1ID))
 
     expect(todolistsAfterReduce.length).toBe(1)
     expect(todolistsAfterReduce[0].id).toBe(todolist2ID)
@@ -54,7 +57,10 @@ test("todolist should be removed todolist", () => {
 test("todolist title should be changed", () => {
     const todolistsAfterReduce = todolistReducer(
         todolists,
-        todolistActions.updateTitle({ id: todolist2ID, title: "What to pay" }),
+        todolistActions.updateTodolist.fulfilled({ id: todolist2ID, title: "What to pay" }, "requestId", {
+            id: todolist2ID,
+            title: "What to pay",
+        }),
     )
 
     expect(todolistsAfterReduce[0].title).toBe("What to learn")
@@ -62,17 +68,14 @@ test("todolist title should be changed", () => {
 })
 
 test("todolist filter should be changed", () => {
-    const todolistsAfterReduce = todolistReducer(
-        todolists,
-        todolistActions.updateFilter({ id: todolist2ID, filter: FilterType.Active }),
-    )
+    const todolistsAfterReduce = todolistReducer(todolists, todolistActions.updateFilter({ id: todolist2ID, filter: FilterType.Active }))
     expect(todolistsAfterReduce[0].filter).toBe(FilterType.All)
     expect(todolistsAfterReduce[1].filter).toBe(FilterType.Active)
 })
 
 test("todolists array should be not empty", () => {
     const initialState: TodolistUI[] = []
-    const todolistsAfterReduce = todolistReducer(initialState, todolistActions.read(todolists))
+    const todolistsAfterReduce = todolistReducer(initialState, todolistActions.fetchTodolists.fulfilled(todolists, "requestId", undefined))
     expect(initialState.length).toBe(0)
     expect(todolistsAfterReduce.length).toBe(2)
 })

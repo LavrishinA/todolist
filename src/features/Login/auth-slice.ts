@@ -1,75 +1,96 @@
 import { handleServerAppError, handleServerNetworkError } from "utils/error-utils"
 import { authApi, ResponseStatuses } from "api/todolistApi"
-import { LoginParams } from "./login"
-import { todolistActions } from "features/TodolistsList/todolist-slice"
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { AppDispatch, AppThunk } from "app/store"
+import { asyncThunkCreator, buildCreateSlice } from "@reduxjs/toolkit"
 import { appActions } from "app/app-slice"
+import { LoginParams } from "features/Login/login"
 
 const initialState = {
     isLoggedIn: false,
 }
-
-export const slice = createSlice({
+const createAuthSlice = buildCreateSlice({
+    creators: { asyncThunk: asyncThunkCreator },
+})
+export const slice = createAuthSlice({
     name: "auth",
     initialState,
-    reducers: {
-        setIsLoggedIn: (state, action: PayloadAction<{ isLoggedIn: boolean }>) => {
-            state.isLoggedIn = action.payload.isLoggedIn
-        },
-    },
+    reducers: (create) => ({
+        login: create.asyncThunk(
+            async (arg: LoginParams, thunkAPI) => {
+                const { dispatch, rejectWithValue } = thunkAPI
+                dispatch(appActions.setStatus({ status: "loading" }))
+                try {
+                    const res = await authApi.login(arg)
+                    if (res.data.resultCode === ResponseStatuses.succeeded) {
+                        dispatch(appActions.setStatus({ status: "succeeded" }))
+                        return true
+                    } else {
+                        handleServerAppError(res.data, dispatch)
+                        return rejectWithValue(null)
+                    }
+                } catch (error) {
+                    handleServerNetworkError(error, dispatch)
+                    return rejectWithValue(null)
+                }
+            },
+            {
+                fulfilled: (state, action) => {
+                    state.isLoggedIn = action.payload
+                },
+            },
+        ),
+        me: create.asyncThunk(
+            async (arg: undefined, thunkAPI) => {
+                const { dispatch, rejectWithValue } = thunkAPI
+                dispatch(appActions.setStatus({ status: "loading" }))
+                try {
+                    const res = await authApi.me()
+                    if (res.data.resultCode === ResponseStatuses.succeeded) {
+                        dispatch(appActions.setStatus({ status: "succeeded" }))
+                        return true
+                    } else {
+                        dispatch(appActions.setStatus({ status: "failed" }))
+                        // handleServerAppError(res.data, dispatch)
+                        return rejectWithValue(null)
+                    }
+                } catch (error) {
+                    handleServerNetworkError(error, dispatch)
+                    return rejectWithValue(null)
+                } finally {
+                    dispatch(appActions.setIsInitialized({ isInitialized: true }))
+                }
+            },
+            {
+                fulfilled: (state, action) => {
+                    state.isLoggedIn = action.payload
+                },
+            },
+        ),
+        logout: create.asyncThunk(
+            async (arg: undefined, thunkAPI) => {
+                const { dispatch, rejectWithValue } = thunkAPI
+                dispatch(appActions.setStatus({ status: "loading" }))
+                try {
+                    const res = await authApi.logout()
+                    if (res.data.resultCode === ResponseStatuses.succeeded) {
+                        dispatch(appActions.setStatus({ status: "succeeded" }))
+                        return false
+                    } else {
+                        handleServerAppError(res.data, dispatch)
+                        return rejectWithValue(null)
+                    }
+                } catch (error) {
+                    handleServerNetworkError(error, dispatch)
+                    return rejectWithValue(null)
+                }
+            },
+            {
+                fulfilled: (state, action) => {
+                    state.isLoggedIn = action.payload
+                },
+            },
+        ),
+    }),
 })
 
 export const authReducer = slice.reducer
 export const authActions = slice.actions
-
-// thunks
-export const login =
-    (data: LoginParams): AppThunk =>
-    async (dispatch: AppDispatch) => {
-        dispatch(appActions.setStatus({ status: "loading" }))
-        try {
-            const res = await authApi.login(data)
-            if (res.data.resultCode === ResponseStatuses.succeeded) {
-                dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }))
-                dispatch(appActions.setStatus({ status: "succeeded" }))
-            } else {
-                handleServerAppError(res.data, dispatch)
-            }
-        } catch (e) {
-            handleServerNetworkError(e as Error, dispatch)
-        }
-    }
-
-export const me = (): AppThunk => async (dispatch: AppDispatch) => {
-    dispatch(appActions.setStatus({ status: "loading" }))
-    try {
-        const res = await authApi.me()
-        if (res.data.resultCode === ResponseStatuses.succeeded) {
-            dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }))
-            dispatch(appActions.setStatus({ status: "succeeded" }))
-        } else {
-            dispatch(appActions.setStatus({ status: "failed" }))
-        }
-    } catch (e) {
-        handleServerNetworkError(e as Error, dispatch)
-    } finally {
-        dispatch(appActions.setIsInitialized({ isInitialized: true }))
-    }
-}
-
-export const logout = (): AppThunk => async (dispatch: AppDispatch) => {
-    dispatch(appActions.setStatus({ status: "loading" }))
-    try {
-        const res = await authApi.logout()
-        if (res.data.resultCode === ResponseStatuses.succeeded) {
-            dispatch(authActions.setIsLoggedIn({ isLoggedIn: false }))
-            dispatch(appActions.setStatus({ status: "succeeded" }))
-            dispatch(todolistActions.clearData())
-        } else {
-            handleServerAppError(res.data, dispatch)
-        }
-    } catch (e) {
-        handleServerNetworkError(e as Error, dispatch)
-    }
-}

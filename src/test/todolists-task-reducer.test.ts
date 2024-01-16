@@ -12,7 +12,7 @@ test("ids should be equals", () => {
         order: 3,
         filter: FilterType.All,
     }
-    const action = todolistActions.create(newTodolist)
+    const action = todolistActions.createTodolist.fulfilled(newTodolist, "requestId", "What to buy")
     const tasksAfterReduce = taskReducer(task, action)
     const todolistsAfterReduce = todolistReducer(todolists, action)
 

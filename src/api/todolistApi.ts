@@ -11,11 +11,10 @@ const instance = axios.create({
 
 export const authApi = {
     login(data: LoginParams) {
-        return instance.post<
-            TodolistResponse<{ userId: number }>,
-            AxiosResponse<TodolistResponse<{ userId: number }>>,
-            LoginParams
-        >("/auth/login", data)
+        return instance.post<TodolistResponse<{ userId: number }>, AxiosResponse<TodolistResponse<{ userId: number }>>, LoginParams>(
+            "/auth/login",
+            data,
+        )
     },
     me() {
         return instance.get<TodolistResponse<User>>("/auth/me")
@@ -26,8 +25,8 @@ export const authApi = {
 }
 
 export const todolistApi = {
-    getTodolists(): Promise<AxiosResponse<TodolistItemArgs[]>> {
-        return instance.get("/todo-lists")
+    getTodolists() {
+        return instance.get<TodolistItemArgs[]>("/todo-lists")
     },
     createTodolist(title: string): Promise<AxiosResponse<TodolistResponse<{ item: TodolistItemArgs }>>> {
         return instance.post("/todo-lists", { title })

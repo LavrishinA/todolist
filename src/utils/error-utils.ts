@@ -2,8 +2,9 @@ import { TodolistResponse } from "api/todolistApi"
 import { appActions } from "app/app-slice"
 import { AppDispatch } from "app/store"
 import axios from "axios"
+import { Dispatch } from "redux"
 
-export const handleServerAppError = (data: TodolistResponse, dispatch: AppDispatch) => {
+export const handleServerAppError = (data: TodolistResponse, dispatch: Dispatch) => {
     if (data.messages.length) {
         dispatch(appActions.setError({ error: data.messages[0] }))
     } else {
@@ -12,7 +13,7 @@ export const handleServerAppError = (data: TodolistResponse, dispatch: AppDispat
     dispatch(appActions.setStatus({ status: "failed" }))
 }
 
-export const handleServerNetworkError = (err: unknown, dispatch: AppDispatch): void => {
+export const handleServerNetworkError = (err: unknown, dispatch: Dispatch): void => {
     let errorMessage = "Some error occurred"
 
     // ❗Проверка на наличие axios ошибки

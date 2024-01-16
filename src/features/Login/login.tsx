@@ -9,9 +9,9 @@ import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
 import { useFormik } from "formik"
 import { useAppDispatch, useAppSelector } from "app/store"
-import { login } from "features/Login/auth-slice"
 import { Navigate } from "react-router-dom"
 import { selectIsLoggedIn } from "features/Login/auth-selectors"
+import { authActions } from "features/Login/auth-slice"
 
 export type LoginParams = {
     email: string
@@ -50,7 +50,7 @@ export const Login = () => {
             return errors
         },
         onSubmit: (values) => {
-            dispatch(login(values))
+            dispatch(authActions.login(values))
             formik.resetForm()
         },
     })
@@ -78,15 +78,8 @@ export const Login = () => {
                     <form onSubmit={formik.handleSubmit}>
                         <FormGroup>
                             <TextField label="Email" margin="normal" {...formik.getFieldProps("email")} />
-                            {formik.touched.email && formik.errors.email ? (
-                                <div style={{ color: "red" }}>{formik.errors.email}</div>
-                            ) : null}
-                            <TextField
-                                type="password"
-                                label="Password"
-                                margin="normal"
-                                {...formik.getFieldProps("password")}
-                            />
+                            {formik.touched.email && formik.errors.email ? <div style={{ color: "red" }}>{formik.errors.email}</div> : null}
+                            <TextField type="password" label="Password" margin="normal" {...formik.getFieldProps("password")} />
                             {formik.touched.password && formik.errors.password ? (
                                 <div style={{ color: "red" }}>{formik.errors.password}</div>
                             ) : null}

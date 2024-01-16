@@ -13,7 +13,7 @@ import { useAppDispatch, useAppSelector } from "./store"
 import { ErrorSnackbar } from "components/ErrorSnackbar/ErrorSnackbar"
 import { Login } from "features/Login/login"
 import { Navigate, Route, Routes } from "react-router-dom"
-import { logout, me } from "features/Login/auth-slice"
+import { authActions } from "features/Login/auth-slice"
 import CircularProgress from "@mui/material/CircularProgress"
 import { selectIsInitialized, selectStatus } from "app/app-selectors"
 import { selectIsLoggedIn } from "features/Login/auth-selectors"
@@ -25,11 +25,11 @@ export function App() {
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        dispatch(me())
+        dispatch(authActions.me())
     }, [dispatch])
 
     const logoutHandler = () => {
-        dispatch(logout())
+        dispatch(authActions.logout())
     }
 
     if (!isInitialized) {
@@ -56,9 +56,7 @@ export function App() {
                         </Button>
                     )}
                 </Toolbar>
-                {status === "loading" && (
-                    <LinearProgress color="secondary" sx={{ position: "absolute", top: "100%", left: 0, right: 0 }} />
-                )}
+                {status === "loading" && <LinearProgress color="secondary" sx={{ position: "absolute", top: "100%", left: 0, right: 0 }} />}
             </AppBar>
             <Container maxWidth={"lg"}>
                 <Routes>
