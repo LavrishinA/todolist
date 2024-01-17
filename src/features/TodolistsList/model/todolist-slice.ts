@@ -1,19 +1,14 @@
-import { ResponseStatuses, todolistApi, TodolistItemArgs } from "api/todolistApi"
+import { todolistApi, TodolistItemArgs } from "features/TodolistsList/api/todolistApi"
 import { appActions, RequestStatusType } from "app/app-slice"
-import { handleServerAppError, handleServerNetworkError } from "utils/error-utils"
+import { handleServerAppError, handleServerNetworkError } from "shared/lib/error-utils"
 import { asyncThunkCreator, buildCreateSlice, PayloadAction } from "@reduxjs/toolkit"
-import { authActions } from "features/Login/auth-slice"
+import { authActions } from "features/Login/model/auth-slice"
+import { FilterType, ResponseStatuses } from "shared/lib"
 
 const createTodolistSlice = buildCreateSlice({
     creators: { asyncThunk: asyncThunkCreator },
 })
 const initialState: TodolistUI[] = []
-
-export enum FilterType {
-    All = "all",
-    Active = "active",
-    Completed = "completed",
-}
 
 const slice = createTodolistSlice({
     name: "todolist",

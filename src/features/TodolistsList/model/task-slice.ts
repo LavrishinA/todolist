@@ -1,10 +1,11 @@
-import { ResponseStatuses, TaskItemArgs, TaskPriorities, TaskStatuses, todolistApi } from "api/todolistApi"
+import { TaskItemArgs, todolistApi } from "features/TodolistsList/api/todolistApi"
 import { AppDispatch, Store } from "app/store"
-import { handleServerAppError, handleServerNetworkError } from "utils/error-utils"
+import { handleServerAppError, handleServerNetworkError } from "shared/lib/error-utils"
 import { appActions } from "app/app-slice"
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { todolistActions } from "features/TodolistsList/todolist-slice"
-import { authActions } from "features/Login/auth-slice"
+import { todolistActions } from "features/TodolistsList/model/todolist-slice"
+import { authActions } from "features/Login/model/auth-slice"
+import { ResponseStatuses, TaskPriorities, TaskStatuses } from "shared/lib"
 
 const initialState: Tasks = {}
 

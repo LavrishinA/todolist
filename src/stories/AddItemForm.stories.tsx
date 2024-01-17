@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react"
-import { AddItemForm } from "../components/AddItemForm/AddItemForm"
+import { AddItemForm } from "shared/ui"
 
 const meta: Meta<typeof AddItemForm> = {
     title: "TodolistsList/AddItemForm",

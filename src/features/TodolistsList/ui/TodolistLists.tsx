@@ -1,16 +1,17 @@
 import React, { FC, useCallback, useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "app/store"
-import { FilterType, todolistActions } from "features/TodolistsList/todolist-slice"
-import { tasksThunks } from "features/TodolistsList/task-slice"
-import { TaskStatuses } from "api/todolistApi"
-import { AddItemForm } from "components/AddItemForm/AddItemForm"
-import { Todolist } from "./Todolist/Todolist"
+import { todolistActions } from "features/TodolistsList/model/todolist-slice"
+import { tasksThunks } from "features/TodolistsList/model/task-slice"
+
 import Paper from "@mui/material/Paper/Paper"
 import Grid from "@mui/material/Grid/Grid"
 import { Navigate } from "react-router-dom"
-import { selectIsLoggedIn } from "features/Login/auth-selectors"
-import { selectTodolist } from "features/TodolistsList/todolist-selectors"
-import { selectTask } from "features/TodolistsList/task-selectors"
+import { selectIsLoggedIn } from "features/Login/model/auth-selectors"
+import { selectTodolist } from "features/TodolistsList/model/todolist-selectors"
+import { selectTask } from "features/TodolistsList/model/task-selectors"
+import { AddItemForm } from "shared/ui"
+import { Todolist } from "./Todolist"
+import { FilterType, TaskStatuses } from "shared/lib"
 
 export const TodolistLists: FC = () => {
     const todolists = useAppSelector(selectTodolist)

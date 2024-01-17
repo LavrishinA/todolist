@@ -1,16 +1,15 @@
 import React, { FC, useCallback, useEffect } from "react"
-import { AddItemForm } from "components/AddItemForm/AddItemForm"
-import { EditableSpan } from "components/EditableSpan/EditableSpan"
-import { Task } from "./Task/Task"
+import { Task } from "features/TodolistsList/ui/Task"
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup"
 import IconButton from "@mui/material/IconButton"
 import DeleteForever from "@mui/icons-material/DeleteForever"
 import ToggleButton from "@mui/material/ToggleButton"
-import { TaskItemArgs, TaskStatuses } from "api/todolistApi"
+import { TaskItemArgs } from "features/TodolistsList/api/todolistApi"
 import { useAppDispatch } from "app/store"
-import { tasksThunks } from "features/TodolistsList/task-slice"
-import { FilterType } from "features/TodolistsList/todolist-slice"
+import { tasksThunks } from "features/TodolistsList/model/task-slice"
 import { RequestStatusType } from "app/app-slice"
+import { AddItemForm, EditableSpan } from "shared/ui"
+import { FilterType, TaskStatuses } from "shared/lib"
 
 const filterTasks = (tasks: Array<TaskItemArgs>, filter: FilterType): Array<TaskItemArgs> => {
     if (filter === FilterType.All) return tasks
@@ -60,10 +59,7 @@ export const Todolist: FC<TodolistArgs> = React.memo(
         const filterCompletedHandler = useCallback(() => onUpdateFilter(id, FilterType.Completed), [id, onUpdateFilter])
 
         const deleteTodolistHandler = useCallback(() => onDeleteTodolist(id), [id, onDeleteTodolist])
-        const todolistTitleHandler = useCallback(
-            (title: string) => onUpdateTodolistTitle(id, title),
-            [id, onUpdateTodolistTitle],
-        )
+        const todolistTitleHandler = useCallback((title: string) => onUpdateTodolistTitle(id, title), [id, onUpdateTodolistTitle])
 
         const createTaskHandler = useCallback((title: string) => onCreateTask(id, title), [id, onCreateTask])
 

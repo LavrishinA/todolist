@@ -1,28 +1,6 @@
-import axios, { AxiosResponse } from "axios"
-import { LoginParams } from "features/Login/login"
-
-const instance = axios.create({
-    baseURL: "https://social-network.samuraijs.com/api/1.1",
-    withCredentials: true,
-    headers: {
-        "API-KEY": "b00ccd4a-cf77-4c91-bdbe-aa7fb7f8fcd9",
-    },
-})
-
-export const authApi = {
-    login(data: LoginParams) {
-        return instance.post<TodolistResponse<{ userId: number }>, AxiosResponse<TodolistResponse<{ userId: number }>>, LoginParams>(
-            "/auth/login",
-            data,
-        )
-    },
-    me() {
-        return instance.get<TodolistResponse<User>>("/auth/me")
-    },
-    logout() {
-        return instance.delete<TodolistResponse>("/auth/login")
-    },
-}
+import { AxiosResponse } from "axios"
+import { instance } from "shared/api"
+import { TaskPriorities, TaskStatuses } from "shared/lib"
 
 export const todolistApi = {
     getTodolists() {
@@ -109,24 +87,4 @@ export type TasksResponse = {
     items: TaskItemArgs[]
     totalCount: number
     error: string | null
-}
-
-export enum TaskStatuses {
-    New = 0,
-    InProgress = 1,
-    Completed = 2,
-    Draft = 3,
-}
-
-export enum TaskPriorities {
-    Low = 0,
-    Middle = 1,
-    Hi = 2,
-    Urgently = 3,
-    Later = 4,
-}
-
-export enum ResponseStatuses {
-    succeeded = 0,
-    failed = 1,
 }

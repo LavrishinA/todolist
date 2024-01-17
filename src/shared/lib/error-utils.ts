@@ -1,6 +1,5 @@
-import { TodolistResponse } from "api/todolistApi"
+import { TodolistResponse } from "features/TodolistsList/api/todolistApi"
 import { appActions } from "app/app-slice"
-import { AppDispatch } from "app/store"
 import axios from "axios"
 import { Dispatch } from "redux"
 

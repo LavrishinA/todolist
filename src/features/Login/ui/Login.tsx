@@ -10,20 +10,8 @@ import Button from "@mui/material/Button"
 import { useFormik } from "formik"
 import { useAppDispatch, useAppSelector } from "app/store"
 import { Navigate } from "react-router-dom"
-import { selectIsLoggedIn } from "features/Login/auth-selectors"
-import { authActions } from "features/Login/auth-slice"
-
-export type LoginParams = {
-    email: string
-    password: string
-    rememberMe: boolean
-}
-
-type FormikErrorType = {
-    email?: string
-    password?: string
-    rememberMe?: boolean
-}
+import { authActions } from "features/Login/model/auth-slice"
+import { selectIsLoggedIn } from "features/Login/model/auth-selectors"
 
 export const Login = () => {
     const dispatch = useAppDispatch()
@@ -99,4 +87,10 @@ export const Login = () => {
             </Grid>
         </Grid>
     )
+}
+
+type FormikErrorType = {
+    email?: string
+    password?: string
+    rememberMe?: boolean
 }

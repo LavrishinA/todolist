@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { authActions } from "features/Login/auth-slice"
+import { authActions } from "features/Login/model/auth-slice"
 
 const initialState = {
     isInitialized: false,

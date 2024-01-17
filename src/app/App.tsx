@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { TodolistLists } from "features/TodolistsList/TodolistLists"
+import { TodolistLists } from "features/TodolistsList/ui/TodolistLists"
 import Container from "@mui/material/Container"
 import Toolbar from "@mui/material/Toolbar"
 import AppBar from "@mui/material/AppBar/AppBar"
@@ -10,13 +10,14 @@ import MenuIcon from "@mui/icons-material/Menu"
 import "./App.css"
 import LinearProgress from "@mui/material/LinearProgress"
 import { useAppDispatch, useAppSelector } from "./store"
-import { ErrorSnackbar } from "components/ErrorSnackbar/ErrorSnackbar"
-import { Login } from "features/Login/login"
+
+import { Login } from "features/Login/ui/Login"
 import { Navigate, Route, Routes } from "react-router-dom"
-import { authActions } from "features/Login/auth-slice"
+import { authActions } from "features/Login/model/auth-slice"
 import CircularProgress from "@mui/material/CircularProgress"
 import { selectIsInitialized, selectStatus } from "app/app-selectors"
-import { selectIsLoggedIn } from "features/Login/auth-selectors"
+import { selectIsLoggedIn } from "features/Login/model/auth-selectors"
+import { ErrorSnackbar } from "shared/ui"
 
 export function App() {
     const status = useAppSelector(selectStatus)

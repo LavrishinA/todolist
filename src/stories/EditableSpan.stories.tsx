@@ -1,4 +1,4 @@
-import { EditableSpan } from "../components/EditableSpan/EditableSpan"
+import { EditableSpan } from "shared/ui"
 import { Meta, StoryObj } from "@storybook/react"
 
 const meta: Meta<typeof EditableSpan> = {

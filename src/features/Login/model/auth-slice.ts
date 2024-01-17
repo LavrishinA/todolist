@@ -1,16 +1,17 @@
-import { handleServerAppError, handleServerNetworkError } from "utils/error-utils"
-import { authApi, ResponseStatuses } from "api/todolistApi"
 import { asyncThunkCreator, buildCreateSlice } from "@reduxjs/toolkit"
 import { appActions } from "app/app-slice"
-import { LoginParams } from "features/Login/login"
+import { handleServerAppError, handleServerNetworkError, ResponseStatuses } from "shared/lib"
+import { authApi, LoginParams } from "features/Login/api/authApi"
 
 const initialState = {
     isLoggedIn: false,
 }
+
 const createAuthSlice = buildCreateSlice({
     creators: { asyncThunk: asyncThunkCreator },
 })
-export const slice = createAuthSlice({
+
+const slice = createAuthSlice({
     name: "auth",
     initialState,
     reducers: (create) => ({
