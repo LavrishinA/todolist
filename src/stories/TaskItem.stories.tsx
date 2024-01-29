@@ -9,17 +9,7 @@ const meta: Meta<typeof Task> = {
         layout: "centered",
     },
     tags: ["autodocs"],
-    argTypes: {
-        onUpdateTaskStatus: {
-            action: "Update Task Status",
-        },
-        onUpdateTaskTitle: {
-            action: "Update Task Title",
-        },
-        onDeleteTask: {
-            action: "Delete Task",
-        },
-    },
+    argTypes: {},
     args: {
         task: {
             id: "1",

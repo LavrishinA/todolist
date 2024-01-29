@@ -5,29 +5,32 @@ import IconButton from "@mui/material/IconButton"
 import DeleteForever from "@mui/icons-material/DeleteForever"
 import Divider from "@mui/material/Divider"
 import { EditableSpan } from "shared/ui"
-import { TaskStatuses } from "shared/lib"
+import { TaskStatuses, useAppDispatch } from "shared/lib"
 import { TaskItemArgs } from "../api/taskApi"
+import { tasksThunks } from "features/TodolistsList/model"
 
 type Props = {
     task: TaskItemArgs
     id: string
-    onUpdateTaskStatus: (todoListId: string, taskId: string, status: TaskStatuses) => void
-    onUpdateTaskTitle: (todoListId: string, taskId: string, title: string) => void
-    onDeleteTask: (todoListId: string, taskId: string) => void
 }
 
-export const Task = React.memo(({ task, id, onUpdateTaskStatus, onUpdateTaskTitle, onDeleteTask }: Props) => {
+export const Task = React.memo(({ task, id }: Props) => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const dispatch = useAppDispatch()
 
     const updateTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
         const status = e.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New
-        onUpdateTaskStatus(id, task.id, status)
+        dispatch(tasksThunks.updateTask({ id, taskId: task.id, task: { status } }))
     }
-    const updateTaskTitleHandler = useCallback((title: string) => onUpdateTaskTitle(id, task.id, title), [id, onUpdateTaskTitle, task.id])
+
+    const updateTaskTitleHandler = useCallback(
+        (title: string) => dispatch(tasksThunks.updateTask({ id, taskId: task.id, task: { title } })),
+        [id, task.id, dispatch],
+    )
 
     const deleteTaskHandler = () => {
         setIsLoading(true)
-        onDeleteTask(id, task.id)
+        dispatch(tasksThunks.deleteTask({ id, taskId: task.id }))
     }
 
     return (

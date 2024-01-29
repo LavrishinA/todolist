@@ -1,4 +1,4 @@
-import { appActions, RequestStatusType } from "app/app-slice"
+import { appActions, RequestStatus } from "app/app-slice"
 import { handleServerAppError, handleServerNetworkError } from "shared/lib/error-utils"
 import { asyncThunkCreator, buildCreateSlice, PayloadAction } from "@reduxjs/toolkit"
 import { FilterType, ResponseStatuses } from "shared/lib"
@@ -14,7 +14,7 @@ const slice = createTodolistSlice({
     name: "todolist",
     initialState,
     reducers: (create) => ({
-        updateEntityStatus: create.reducer((state, action: PayloadAction<{ id: string; status: RequestStatusType }>) => {
+        updateEntityStatus: create.reducer((state, action: PayloadAction<{ id: string; status: RequestStatus }>) => {
             const index = state.findIndex((todo) => todo.id === action.payload.id)
             if (index !== -1) state[index].entityStatus = action.payload.status
         }),
@@ -136,5 +136,5 @@ export const todolistSelectors = slice.selectors
 //types
 export type TodolistUI = TodolistItemArgs & {
     filter: FilterType
-    entityStatus: RequestStatusType
+    entityStatus: RequestStatus
 }
