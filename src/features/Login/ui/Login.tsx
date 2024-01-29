@@ -9,10 +9,9 @@ import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
 import { useFormik } from "formik"
 import { Navigate } from "react-router-dom"
-import { authActions, authSelectors } from "features/Login/model/auth-slice"
-
 import { LoginParams } from "../api/authApi"
 import { useAppDispatch, useAppSelector } from "shared/lib"
+import { authActions, authSelectors } from "../model/auth-slice"
 
 export const Login = () => {
     const dispatch = useAppDispatch()

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useCallback, useState } from "react"
+import React, { ChangeEvent, useCallback, useState } from "react"
 import Checkbox from "@mui/material/Checkbox"
 import { pink } from "@mui/material/colors"
 import IconButton from "@mui/material/IconButton"
@@ -8,7 +8,7 @@ import { EditableSpan } from "shared/ui"
 import { TaskStatuses } from "shared/lib"
 import { TaskItemArgs } from "../api/taskApi"
 
-export type TaskItemType = {
+type Props = {
     task: TaskItemArgs
     id: string
     onUpdateTaskStatus: (todoListId: string, taskId: string, status: TaskStatuses) => void
@@ -16,7 +16,7 @@ export type TaskItemType = {
     onDeleteTask: (todoListId: string, taskId: string) => void
 }
 
-export const Task: FC<TaskItemType> = React.memo(({ task, id, onUpdateTaskStatus, onUpdateTaskTitle, onDeleteTask }) => {
+export const Task = React.memo(({ task, id, onUpdateTaskStatus, onUpdateTaskTitle, onDeleteTask }: Props) => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const updateTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {

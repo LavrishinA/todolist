@@ -3,12 +3,12 @@ import IconButton from "@mui/material/IconButton/"
 import TextField from "@mui/material/TextField"
 import PlaylistAddSharp from "@mui/icons-material/PlaylistAddSharp"
 
-export type AddItemFormPropsType = {
+type Props = {
     onCreate: (title: string) => void
     disabled?: boolean
 }
 
-export const AddItemForm: React.FC<AddItemFormPropsType> = React.memo(({ onCreate, disabled }) => {
+export const AddItemForm = React.memo(({ onCreate, disabled }: Props) => {
     const [itemTitle, setItemTitle] = useState("")
     const [error, setError] = useState<null | string>(null)
 

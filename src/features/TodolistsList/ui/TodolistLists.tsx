@@ -9,7 +9,7 @@ import { FilterType, TaskStatuses, useAppDispatch, useAppSelector } from "shared
 import { taskSelectors, tasksThunks, todolistActions, todolistSelectors } from "../model"
 import { authSelectors } from "features/Login"
 
-export const TodolistLists: FC = () => {
+export const TodolistLists = () => {
     const todolists = useAppSelector(todolistSelectors.todolists)
     const tasks = useAppSelector(taskSelectors.tasks)
     const isLoggedIn = useAppSelector(authSelectors.isLoggedIn)

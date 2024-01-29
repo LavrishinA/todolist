@@ -3,8 +3,8 @@ import { Store } from "app/store"
 import { handleServerAppError, handleServerNetworkError } from "shared/lib/error-utils"
 import { appActions } from "app/app-slice"
 import { authActions } from "features/Login/model/auth-slice"
-import { ResponseStatuses, TaskPriorities, TaskStatuses } from "shared/lib"
-import { TaskApi, TaskItemArgs } from "features/TodolistsList/api"
+import { ResponseStatuses } from "shared/lib"
+import { TaskApi, TaskItemArgs, updateTaskModel } from "features/TodolistsList/api"
 import { todolistActions } from "./todolistSlice"
 import { AppDispatch } from "shared/lib/hooks"
 
@@ -157,14 +157,6 @@ export const taskSelectors = slice.selectors
 export const tasksThunks = { fetchTasks, createTask, deleteTask, updateTask }
 
 export type Tasks = Record<string, TaskItemArgs[]>
+export type payloadTaskModel = Partial<updateTaskModel>
 type DeleteTaskArg = { id: string; taskId: string }
 type updateTaskArg = { id: string; taskId: string; task: payloadTaskModel }
-
-export type payloadTaskModel = {
-    title?: string
-    description?: string | null
-    status?: TaskStatuses
-    priority?: TaskPriorities
-    startDate?: Date | null
-    deadline?: Date | null
-}

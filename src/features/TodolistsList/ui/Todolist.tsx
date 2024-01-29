@@ -18,7 +18,7 @@ const filterTasks = (tasks: Array<TaskItemArgs>, filter: FilterType): Array<Task
     return tasks
 }
 
-type TodolistArgs = {
+type Props = {
     id: string
     title: string
     entityStatus: RequestStatusType
@@ -33,7 +33,7 @@ type TodolistArgs = {
     onDeleteTodolist: (todolistId: string) => void
 }
 
-export const Todolist: FC<TodolistArgs> = React.memo(
+export const Todolist = React.memo(
     ({
         id,
         title,
@@ -47,7 +47,7 @@ export const Todolist: FC<TodolistArgs> = React.memo(
         onDeleteTask,
         onDeleteTodolist,
         onUpdateTodolistTitle,
-    }) => {
+    }: Props) => {
         const dispatch = useAppDispatch()
 
         useEffect(() => {

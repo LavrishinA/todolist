@@ -4,7 +4,7 @@ import { handleServerAppError, handleServerNetworkError, ResponseStatuses } from
 import { authApi, LoginParams } from "features/Login/api/authApi"
 
 const initialState = {
-    isLoggedIn: false,
+    isLoggedIn: false as boolean,
 }
 
 const createAuthSlice = buildCreateSlice({
