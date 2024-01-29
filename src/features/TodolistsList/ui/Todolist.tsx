@@ -6,16 +6,10 @@ import DeleteForever from "@mui/icons-material/DeleteForever"
 import ToggleButton from "@mui/material/ToggleButton"
 import { RequestStatus } from "app/app-slice"
 import { AddItemForm, EditableSpan } from "shared/ui"
-import { FilterType, TaskStatuses, useAppDispatch } from "shared/lib"
+import { FilterType, useAppDispatch } from "shared/lib"
 import { tasksThunks, todolistActions } from "../model"
 import { TaskItemArgs } from "../api"
-
-const filterTasks = (tasks: Array<TaskItemArgs>, filter: FilterType): Array<TaskItemArgs> => {
-    if (filter === FilterType.All) return tasks
-    if (filter === FilterType.Active) return tasks.filter((t) => t.status === TaskStatuses.New)
-    if (filter === FilterType.Completed) return tasks.filter((t) => t.status === TaskStatuses.Completed)
-    return tasks
-}
+import { filterTasks } from "features/TodolistsList/lib/filterTask"
 
 type Props = {
     id: string
