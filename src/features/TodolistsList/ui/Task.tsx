@@ -4,9 +4,9 @@ import { pink } from "@mui/material/colors"
 import IconButton from "@mui/material/IconButton"
 import DeleteForever from "@mui/icons-material/DeleteForever"
 import Divider from "@mui/material/Divider"
-import { TaskItemArgs } from "features/TodolistsList/api/todolistApi"
 import { EditableSpan } from "shared/ui"
 import { TaskStatuses } from "shared/lib"
+import { TaskItemArgs } from "../api/taskApi"
 
 export type TaskItemType = {
     task: TaskItemArgs

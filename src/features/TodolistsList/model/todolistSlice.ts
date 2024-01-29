@@ -1,9 +1,9 @@
-import { todolistApi, TodolistItemArgs } from "features/TodolistsList/api/todolistApi"
 import { appActions, RequestStatusType } from "app/app-slice"
 import { handleServerAppError, handleServerNetworkError } from "shared/lib/error-utils"
 import { asyncThunkCreator, buildCreateSlice, PayloadAction } from "@reduxjs/toolkit"
-import { authActions } from "features/Login/model/auth-slice"
 import { FilterType, ResponseStatuses } from "shared/lib"
+import { TodolistApi, TodolistItemArgs } from "../api"
+import { authActions } from "features/Login"
 
 const createTodolistSlice = buildCreateSlice({
     creators: { asyncThunk: asyncThunkCreator },
@@ -27,7 +27,7 @@ const slice = createTodolistSlice({
                 const { dispatch, rejectWithValue } = thunkAPI
                 dispatch(appActions.setStatus({ status: "loading" }))
                 try {
-                    const res = await todolistApi.getTodolists()
+                    const res = await TodolistApi.getTodolists()
                     dispatch(appActions.setStatus({ status: "succeeded" }))
                     return res.data as TodolistItemArgs[]
                 } catch (error) {
@@ -46,7 +46,7 @@ const slice = createTodolistSlice({
                 const { dispatch, rejectWithValue } = thunkAPI
                 dispatch(appActions.setStatus({ status: "loading" }))
                 try {
-                    const res = await todolistApi.createTodolist(arg)
+                    const res = await TodolistApi.createTodolist(arg)
                     if (res.data.resultCode === ResponseStatuses.succeeded) {
                         dispatch(appActions.setStatus({ status: "succeeded" }))
                         return res.data.data.item as TodolistItemArgs
@@ -71,7 +71,7 @@ const slice = createTodolistSlice({
                 dispatch(appActions.setStatus({ status: "loading" }))
                 dispatch(todolistActions.updateEntityStatus({ id, status: "loading" }))
                 try {
-                    const res = await todolistApi.deleteTodolist(id)
+                    const res = await TodolistApi.deleteTodolist(id)
                     if (res.data.resultCode === ResponseStatuses.succeeded) {
                         dispatch(appActions.setStatus({ status: "succeeded" }))
                         return id
@@ -97,7 +97,7 @@ const slice = createTodolistSlice({
                 dispatch(appActions.setStatus({ status: "loading" }))
                 dispatch(todolistActions.updateEntityStatus({ id: arg.id, status: "loading" }))
                 try {
-                    const res = await todolistApi.updateTodolist(arg.id, arg.title)
+                    const res = await TodolistApi.updateTodolist(arg.id, arg.title)
                     if (res.data.resultCode === ResponseStatuses.succeeded) {
                         dispatch(appActions.setStatus({ status: "succeeded" }))
                         dispatch(todolistActions.updateEntityStatus({ id: arg.id, status: "succeeded" }))

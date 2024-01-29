@@ -42,14 +42,14 @@ const slice = createAuthSlice({
         me: create.asyncThunk(
             async (arg: undefined, thunkAPI) => {
                 const { dispatch, rejectWithValue } = thunkAPI
-                dispatch(appActions.setStatus({ status: "loading" }))
+                // dispatch(appActions.setStatus({ status: "loading" }))
                 try {
                     const res = await authApi.me()
                     if (res.data.resultCode === ResponseStatuses.succeeded) {
                         dispatch(appActions.setStatus({ status: "succeeded" }))
                         return true
                     } else {
-                        dispatch(appActions.setStatus({ status: "failed" }))
+                        // dispatch(appActions.setStatus({ status: "failed" }))
                         // handleServerAppError(res.data, dispatch)
                         return rejectWithValue(null)
                     }

@@ -1,8 +1,5 @@
 import React, { FC, useCallback, useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "app/store"
-import { todolistActions } from "features/TodolistsList/model/todolist-slice"
-import { tasksThunks } from "features/TodolistsList/model/task-slice"
-
 import Paper from "@mui/material/Paper/Paper"
 import Grid from "@mui/material/Grid/Grid"
 import { Navigate } from "react-router-dom"
@@ -12,6 +9,7 @@ import { selectTask } from "features/TodolistsList/model/task-selectors"
 import { AddItemForm } from "shared/ui"
 import { Todolist } from "./Todolist"
 import { FilterType, TaskStatuses } from "shared/lib"
+import { tasksThunks, todolistActions } from "../model"
 
 export const TodolistLists: FC = () => {
     const todolists = useAppSelector(selectTodolist)

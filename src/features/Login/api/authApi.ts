@@ -1,19 +1,19 @@
 import { instance } from "shared/api"
 import { AxiosResponse } from "axios"
-import { TodolistResponse, User } from "features/TodolistsList/api/todolistApi"
+import { BaseResponse } from "shared/lib"
 
 export const authApi = {
     login(data: LoginParams) {
-        return instance.post<TodolistResponse<{ userId: number }>, AxiosResponse<TodolistResponse<{ userId: number }>>, LoginParams>(
+        return instance.post<BaseResponse<{ userId: number }>, AxiosResponse<BaseResponse<{ userId: number }>>, LoginParams>(
             "/auth/login",
             data,
         )
     },
     me() {
-        return instance.get<TodolistResponse<User>>("/auth/me")
+        return instance.get<BaseResponse<User>>("/auth/me")
     },
     logout() {
-        return instance.delete<TodolistResponse>("/auth/login")
+        return instance.delete<BaseResponse>("/auth/login")
     },
 }
 
@@ -21,4 +21,10 @@ export type LoginParams = {
     email: string
     password: string
     rememberMe?: boolean
+}
+
+export type User = {
+    id: number
+    email: string
+    login: string
 }

@@ -1,11 +1,11 @@
-import { TaskItemArgs, todolistApi } from "features/TodolistsList/api/todolistApi"
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { AppDispatch, Store } from "app/store"
 import { handleServerAppError, handleServerNetworkError } from "shared/lib/error-utils"
 import { appActions } from "app/app-slice"
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { todolistActions } from "features/TodolistsList/model/todolist-slice"
 import { authActions } from "features/Login/model/auth-slice"
 import { ResponseStatuses, TaskPriorities, TaskStatuses } from "shared/lib"
+import { TaskApi, TaskItemArgs } from "features/TodolistsList/api"
+import { todolistActions } from "./todolistSlice"
 
 const initialState: Tasks = {}
 
@@ -48,6 +48,7 @@ export const createTaskAsyncThunk = createAsyncThunk.withTypes<{
     dispatch: AppDispatch
     rejectValue: null
 }>()
+
 //thunks
 export const fetchTasks = createTaskAsyncThunk<{ id: string; tasks: TaskItemArgs[] }, string>(
     `${slice.name}/fetchTasks`,
@@ -55,7 +56,7 @@ export const fetchTasks = createTaskAsyncThunk<{ id: string; tasks: TaskItemArgs
         const { dispatch, rejectWithValue } = thunkAPI
         dispatch(appActions.setStatus({ status: "loading" }))
         try {
-            const res = await todolistApi.getTasks(id)
+            const res = await TaskApi.getTasks(id)
             const tasks = res.data.items
             dispatch(appActions.setStatus({ status: "succeeded" }))
             return { id, tasks } //payload
@@ -73,7 +74,7 @@ export const createTask = createTaskAsyncThunk<TaskItemArgs, { id: string; title
         dispatch(appActions.setStatus({ status: "loading" }))
 
         try {
-            const res = await todolistApi.createTask(arg.id, arg.title)
+            const res = await TaskApi.createTask(arg.id, arg.title)
             if (res.data.resultCode === ResponseStatuses.succeeded) {
                 dispatch(appActions.setStatus({ status: "succeeded" }))
 
@@ -94,7 +95,7 @@ export const deleteTask = createTaskAsyncThunk<DeleteTaskArg, DeleteTaskArg>(`${
     dispatch(appActions.setStatus({ status: "loading" }))
 
     try {
-        const res = await todolistApi.deleteTask(arg.id, arg.taskId)
+        const res = await TaskApi.deleteTask(arg.id, arg.taskId)
         if (res.data.resultCode === ResponseStatuses.succeeded) {
             dispatch(appActions.setStatus({ status: "succeeded" }))
 
@@ -131,7 +132,7 @@ export const updateTask = createTaskAsyncThunk<updateTaskArg, updateTaskArg>(`${
             ...arg.task,
         }
 
-        const res = await todolistApi.updateTask(arg.id, arg.taskId, taskModel)
+        const res = await TaskApi.updateTask(arg.id, arg.taskId, taskModel)
         if (res.data.resultCode === ResponseStatuses.succeeded) {
             dispatch(appActions.setStatus({ status: "succeeded" }))
 
@@ -150,9 +151,7 @@ export const taskReducer = slice.reducer
 export const taskActions = slice.actions
 export const tasksThunks = { fetchTasks, createTask, deleteTask, updateTask }
 
-export type Tasks = {
-    [key: string]: Array<TaskItemArgs>
-}
+export type Tasks = Record<string, TaskItemArgs[]>
 type DeleteTaskArg = { id: string; taskId: string }
 type updateTaskArg = { id: string; taskId: string; task: payloadTaskModel }
 

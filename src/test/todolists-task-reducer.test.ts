@@ -1,6 +1,5 @@
-import { Tasks, taskReducer } from "features/TodolistsList/model/task-slice"
-import { TodolistUI, todolistReducer, todolistActions } from "features/TodolistsList/model/todolist-slice"
 import { FilterType } from "shared/lib"
+import { taskReducer, Tasks, todolistActions, todolistReducer, TodolistUI } from "features/TodolistsList/model"
 
 test("ids should be equals", () => {
     const task: Tasks = {}

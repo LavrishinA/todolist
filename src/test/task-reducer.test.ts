@@ -1,5 +1,4 @@
-import { Tasks, taskReducer, tasksThunks } from "features/TodolistsList/model/task-slice"
-import { todolistActions } from "features/TodolistsList/model/todolist-slice"
+import { taskReducer, Tasks, tasksThunks, todolistActions } from "features/TodolistsList/model"
 import { TaskPriorities, TaskStatuses } from "shared/lib"
 
 let task: Tasks

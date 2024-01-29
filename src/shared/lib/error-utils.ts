@@ -1,9 +1,9 @@
-import { TodolistResponse } from "features/TodolistsList/api/todolistApi"
 import { appActions } from "app/app-slice"
 import axios from "axios"
 import { Dispatch } from "redux"
+import { BaseResponse } from "./common-types"
 
-export const handleServerAppError = (data: TodolistResponse, dispatch: Dispatch) => {
+export const handleServerAppError = (data: BaseResponse, dispatch: Dispatch) => {
     if (data.messages.length) {
         dispatch(appActions.setError({ error: data.messages[0] }))
     } else {

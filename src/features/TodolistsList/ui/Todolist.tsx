@@ -4,12 +4,14 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup"
 import IconButton from "@mui/material/IconButton"
 import DeleteForever from "@mui/icons-material/DeleteForever"
 import ToggleButton from "@mui/material/ToggleButton"
-import { TaskItemArgs } from "features/TodolistsList/api/todolistApi"
+
 import { useAppDispatch } from "app/store"
-import { tasksThunks } from "features/TodolistsList/model/task-slice"
+
 import { RequestStatusType } from "app/app-slice"
 import { AddItemForm, EditableSpan } from "shared/ui"
 import { FilterType, TaskStatuses } from "shared/lib"
+import { tasksThunks } from "../model"
+import { TaskItemArgs } from "../api"
 
 const filterTasks = (tasks: Array<TaskItemArgs>, filter: FilterType): Array<TaskItemArgs> => {
     if (filter === FilterType.All) return tasks

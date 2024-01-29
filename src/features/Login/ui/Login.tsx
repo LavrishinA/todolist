@@ -37,8 +37,12 @@ export const Login = () => {
             }
             return errors
         },
-        onSubmit: (values) => {
+        onSubmit: (values, formikHelpers) => {
             dispatch(authActions.login(values))
+                .unwrap()
+                .catch((e) => {
+                    console.log(e)
+                })
             formik.resetForm()
         },
     })

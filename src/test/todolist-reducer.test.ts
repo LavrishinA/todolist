@@ -1,6 +1,7 @@
 import { v1 } from "uuid"
-import { todolistActions, todolistReducer, TodolistUI } from "features/TodolistsList/model/todolist-slice"
+
 import { FilterType } from "shared/lib"
+import { todolistActions, todolistReducer, TodolistUI } from "features/TodolistsList/model"
 
 let todolist1ID: string
 let todolist2ID: string
