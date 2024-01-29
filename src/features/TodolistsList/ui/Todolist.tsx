@@ -5,11 +5,9 @@ import IconButton from "@mui/material/IconButton"
 import DeleteForever from "@mui/icons-material/DeleteForever"
 import ToggleButton from "@mui/material/ToggleButton"
 
-import { useAppDispatch } from "app/store"
-
 import { RequestStatusType } from "app/app-slice"
 import { AddItemForm, EditableSpan } from "shared/ui"
-import { FilterType, TaskStatuses } from "shared/lib"
+import { FilterType, TaskStatuses, useAppDispatch } from "shared/lib"
 import { tasksThunks } from "../model"
 import { TaskItemArgs } from "../api"
 

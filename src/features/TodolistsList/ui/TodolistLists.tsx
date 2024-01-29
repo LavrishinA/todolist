@@ -1,20 +1,18 @@
 import React, { FC, useCallback, useEffect } from "react"
-import { useAppDispatch, useAppSelector } from "app/store"
 import Paper from "@mui/material/Paper/Paper"
 import Grid from "@mui/material/Grid/Grid"
 import { Navigate } from "react-router-dom"
-import { selectIsLoggedIn } from "features/Login/model/auth-selectors"
-import { selectTodolist } from "features/TodolistsList/model/todolist-selectors"
-import { selectTask } from "features/TodolistsList/model/task-selectors"
+
 import { AddItemForm } from "shared/ui"
 import { Todolist } from "./Todolist"
-import { FilterType, TaskStatuses } from "shared/lib"
-import { tasksThunks, todolistActions } from "../model"
+import { FilterType, TaskStatuses, useAppDispatch, useAppSelector } from "shared/lib"
+import { taskSelectors, tasksThunks, todolistActions, todolistSelectors } from "../model"
+import { authSelectors } from "features/Login"
 
 export const TodolistLists: FC = () => {
-    const todolists = useAppSelector(selectTodolist)
-    const tasks = useAppSelector(selectTask)
-    const isLoggedIn = useAppSelector(selectIsLoggedIn)
+    const todolists = useAppSelector(todolistSelectors.todolists)
+    const tasks = useAppSelector(taskSelectors.tasks)
+    const isLoggedIn = useAppSelector(authSelectors.isLoggedIn)
     const dispatch = useAppDispatch()
 
     useEffect(() => {

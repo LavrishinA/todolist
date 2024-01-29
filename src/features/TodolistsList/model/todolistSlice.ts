@@ -124,11 +124,14 @@ const slice = createTodolistSlice({
             return []
         })
     },
+    selectors: {
+        todolists: (state) => state,
+    },
 })
 
 export const todolistReducer = slice.reducer
 export const todolistActions = slice.actions
-
+export const todolistSelectors = slice.selectors
 //types
 export type TodolistUI = TodolistItemArgs & {
     filter: FilterType

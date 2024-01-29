@@ -8,14 +8,15 @@ import FormLabel from "@mui/material/FormLabel"
 import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
 import { useFormik } from "formik"
-import { useAppDispatch, useAppSelector } from "app/store"
 import { Navigate } from "react-router-dom"
-import { authActions } from "features/Login/model/auth-slice"
-import { selectIsLoggedIn } from "features/Login/model/auth-selectors"
+import { authActions, authSelectors } from "features/Login/model/auth-slice"
+
+import { LoginParams } from "../api/authApi"
+import { useAppDispatch, useAppSelector } from "shared/lib"
 
 export const Login = () => {
     const dispatch = useAppDispatch()
-    const isLoggedIn = useAppSelector(selectIsLoggedIn)
+    const isLoggedIn = useAppSelector(authSelectors.isLoggedIn)
 
     const formik = useFormik({
         initialValues: {
@@ -37,12 +38,8 @@ export const Login = () => {
             }
             return errors
         },
-        onSubmit: (values, formikHelpers) => {
+        onSubmit: (values) => {
             dispatch(authActions.login(values))
-                .unwrap()
-                .catch((e) => {
-                    console.log(e)
-                })
             formik.resetForm()
         },
     })
@@ -93,8 +90,4 @@ export const Login = () => {
     )
 }
 
-type FormikErrorType = {
-    email?: string
-    password?: string
-    rememberMe?: boolean
-}
+type FormikErrorType = Partial<LoginParams>

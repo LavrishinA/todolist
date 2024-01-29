@@ -1,5 +1,4 @@
 import React, { useEffect } from "react"
-import { TodolistLists } from "features/TodolistsList/ui/TodolistLists"
 import Container from "@mui/material/Container"
 import Toolbar from "@mui/material/Toolbar"
 import AppBar from "@mui/material/AppBar/AppBar"
@@ -7,22 +6,21 @@ import IconButton from "@mui/material/IconButton"
 import Typography from "@mui/material/Typography"
 import Button from "@mui/material/Button"
 import MenuIcon from "@mui/icons-material/Menu"
-import "./App.css"
 import LinearProgress from "@mui/material/LinearProgress"
-import { useAppDispatch, useAppSelector } from "./store"
-
 import { Login } from "features/Login/ui/Login"
 import { Navigate, Route, Routes } from "react-router-dom"
-import { authActions } from "features/Login/model/auth-slice"
 import CircularProgress from "@mui/material/CircularProgress"
-import { selectIsInitialized, selectStatus } from "app/app-selectors"
-import { selectIsLoggedIn } from "features/Login/model/auth-selectors"
 import { ErrorSnackbar } from "shared/ui"
+import { appSelectors } from "app/app-slice"
+import { authActions, authSelectors } from "features/Login"
+import "./App.css"
+import { TodolistLists } from "features/TodolistsList/ui"
+import { useAppDispatch, useAppSelector } from "shared/lib"
 
 export function App() {
-    const status = useAppSelector(selectStatus)
-    const isInitialized = useAppSelector(selectIsInitialized)
-    const isLoggedIn = useAppSelector(selectIsLoggedIn)
+    const status = useAppSelector(appSelectors.status)
+    const isInitialized = useAppSelector(appSelectors.isInitialized)
+    const isLoggedIn = useAppSelector(authSelectors.isLoggedIn)
     const dispatch = useAppDispatch()
 
     useEffect(() => {

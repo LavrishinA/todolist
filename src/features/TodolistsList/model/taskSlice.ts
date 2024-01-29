@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { AppDispatch, Store } from "app/store"
+import { Store } from "app/store"
 import { handleServerAppError, handleServerNetworkError } from "shared/lib/error-utils"
 import { appActions } from "app/app-slice"
 import { authActions } from "features/Login/model/auth-slice"
 import { ResponseStatuses, TaskPriorities, TaskStatuses } from "shared/lib"
 import { TaskApi, TaskItemArgs } from "features/TodolistsList/api"
 import { todolistActions } from "./todolistSlice"
+import { AppDispatch } from "shared/lib/hooks"
 
 const initialState: Tasks = {}
 
@@ -41,6 +42,9 @@ const slice = createSlice({
                 const index = state[action.payload.id].findIndex((t) => t.id === action.payload.taskId)
                 if (index !== -1) state[action.payload.id][index] = { ...state[action.payload.id][index], ...action.payload.task }
             })
+    },
+    selectors: {
+        tasks: (state) => state,
     },
 })
 export const createTaskAsyncThunk = createAsyncThunk.withTypes<{
@@ -115,7 +119,7 @@ export const updateTask = createTaskAsyncThunk<updateTaskArg, updateTaskArg>(`${
     dispatch(appActions.setStatus({ status: "loading" }))
 
     try {
-        const task = getState().tasks[arg.id].find((t) => t.id === arg.taskId)
+        const task = getState().task[arg.id].find((t) => t.id === arg.taskId)
 
         if (!task) {
             console.warn("task not found in the state")
@@ -149,6 +153,7 @@ export const updateTask = createTaskAsyncThunk<updateTaskArg, updateTaskArg>(`${
 
 export const taskReducer = slice.reducer
 export const taskActions = slice.actions
+export const taskSelectors = slice.selectors
 export const tasksThunks = { fetchTasks, createTask, deleteTask, updateTask }
 
 export type Tasks = Record<string, TaskItemArgs[]>

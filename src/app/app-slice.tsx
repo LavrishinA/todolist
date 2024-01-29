@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { authActions } from "features/Login/model/auth-slice"
 
 const initialState = {
     isInitialized: false,
@@ -21,9 +20,14 @@ const slice = createSlice({
             state.isInitialized = action.payload.isInitialized
         },
     },
+    selectors: {
+        status: (state) => state.status,
+        appError: (state) => state.error,
+        isInitialized: (status) => status.isInitialized,
+    },
 })
 
 export const appReducer = slice.reducer
 export const appActions = slice.actions
-
+export const appSelectors = slice.selectors
 export type RequestStatusType = "idle" | "loading" | "succeeded" | "failed"
