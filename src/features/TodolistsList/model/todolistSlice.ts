@@ -1,6 +1,5 @@
-import { appActions, RequestStatus } from "app/app-slice"
-import { handleServerAppError, handleServerNetworkError } from "shared/lib/error-utils"
-import { asyncThunkCreator, buildCreateSlice, PayloadAction } from "@reduxjs/toolkit"
+import { RequestStatus } from "app/app-slice"
+import { asyncThunkCreator, buildCreateSlice, isRejected, PayloadAction } from "@reduxjs/toolkit"
 import { FilterType, ResponseStatuses } from "shared/lib"
 import { TodolistApi, TodolistItemArgs } from "../api"
 import { authActions } from "features/Login"
@@ -23,17 +22,9 @@ const slice = createTodolistSlice({
             if (index !== -1) state[index].filter = action.payload.filter
         }),
         fetchTodolists: create.asyncThunk(
-            async (arg: undefined, thunkAPI) => {
-                const { dispatch, rejectWithValue } = thunkAPI
-                dispatch(appActions.setStatus({ status: "loading" }))
-                try {
-                    const res = await TodolistApi.getTodolists()
-                    dispatch(appActions.setStatus({ status: "succeeded" }))
-                    return res.data as TodolistItemArgs[]
-                } catch (error) {
-                    handleServerNetworkError(error, dispatch)
-                    return rejectWithValue(null)
-                }
+            async (_arg: undefined) => {
+                const res = await TodolistApi.getTodolists()
+                return res.data
             },
             {
                 fulfilled: (state, action) => {
@@ -43,20 +34,12 @@ const slice = createTodolistSlice({
         ),
         createTodolist: create.asyncThunk(
             async (arg: string, thunkAPI) => {
-                const { dispatch, rejectWithValue } = thunkAPI
-                dispatch(appActions.setStatus({ status: "loading" }))
-                try {
-                    const res = await TodolistApi.createTodolist(arg)
-                    if (res.data.resultCode === ResponseStatuses.succeeded) {
-                        dispatch(appActions.setStatus({ status: "succeeded" }))
-                        return res.data.data.item as TodolistItemArgs
-                    } else {
-                        handleServerAppError(res.data, dispatch)
-                        return rejectWithValue(null)
-                    }
-                } catch (error) {
-                    handleServerNetworkError(error, dispatch)
-                    return rejectWithValue(null)
+                const { rejectWithValue } = thunkAPI
+                const res = await TodolistApi.createTodolist(arg)
+                if (res.data.resultCode === ResponseStatuses.succeeded) {
+                    return res.data.data.item as TodolistItemArgs
+                } else {
+                    return rejectWithValue(res.data)
                 }
             },
             {
@@ -68,20 +51,12 @@ const slice = createTodolistSlice({
         deleteTodolist: create.asyncThunk(
             async (id: string, thunkAPI) => {
                 const { dispatch, rejectWithValue } = thunkAPI
-                dispatch(appActions.setStatus({ status: "loading" }))
                 dispatch(todolistActions.updateEntityStatus({ id, status: "loading" }))
-                try {
-                    const res = await TodolistApi.deleteTodolist(id)
-                    if (res.data.resultCode === ResponseStatuses.succeeded) {
-                        dispatch(appActions.setStatus({ status: "succeeded" }))
-                        return id
-                    } else {
-                        handleServerAppError(res.data, dispatch)
-                        return rejectWithValue(null)
-                    }
-                } catch (error) {
-                    handleServerNetworkError(error, dispatch)
-                    return rejectWithValue(null)
+                const res = await TodolistApi.deleteTodolist(id)
+                if (res.data.resultCode === ResponseStatuses.succeeded) {
+                    return id
+                } else {
+                    return rejectWithValue(res.data)
                 }
             },
             {
@@ -94,20 +69,14 @@ const slice = createTodolistSlice({
         updateTodolist: create.asyncThunk(
             async (arg: { id: string; title: string }, thunkAPI) => {
                 const { dispatch, rejectWithValue } = thunkAPI
-                dispatch(appActions.setStatus({ status: "loading" }))
+
                 dispatch(todolistActions.updateEntityStatus({ id: arg.id, status: "loading" }))
-                try {
-                    const res = await TodolistApi.updateTodolist(arg.id, arg.title)
-                    if (res.data.resultCode === ResponseStatuses.succeeded) {
-                        dispatch(appActions.setStatus({ status: "succeeded" }))
-                        dispatch(todolistActions.updateEntityStatus({ id: arg.id, status: "succeeded" }))
-                        return arg
-                    } else {
-                        handleServerAppError(res.data, dispatch)
-                        return rejectWithValue(null)
-                    }
-                } catch (error) {
-                    handleServerNetworkError(error, dispatch)
+
+                const res = await TodolistApi.updateTodolist(arg.id, arg.title)
+                if (res.data.resultCode === ResponseStatuses.succeeded) {
+                    dispatch(todolistActions.updateEntityStatus({ id: arg.id, status: "succeeded" }))
+                    return arg
+                } else {
                     return rejectWithValue(null)
                 }
             },
@@ -120,9 +89,16 @@ const slice = createTodolistSlice({
         ),
     }),
     extraReducers: (builder) => {
-        builder.addCase(authActions.logout.fulfilled, () => {
-            return []
-        })
+        builder
+            .addCase(authActions.logout.fulfilled, () => {
+                return []
+            })
+            .addMatcher(isRejected(todolistActions.deleteTodolist), (state, action) => {
+                const todo = state.find((todo) => todo.id === action.meta.arg)
+                if (todo) {
+                    todo.entityStatus = "idle"
+                }
+            })
     },
     selectors: {
         todolists: (state) => state,

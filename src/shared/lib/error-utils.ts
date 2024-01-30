@@ -9,7 +9,6 @@ export const handleServerAppError = (data: BaseResponse, dispatch: Dispatch) => 
     } else {
         dispatch(appActions.setError({ error: "Some error occurred" }))
     }
-    dispatch(appActions.setStatus({ status: "failed" }))
 }
 
 export const handleServerNetworkError = (err: unknown, dispatch: Dispatch): void => {
@@ -29,5 +28,4 @@ export const handleServerNetworkError = (err: unknown, dispatch: Dispatch): void
     }
 
     dispatch(appActions.setError({ error: errorMessage }))
-    dispatch(appActions.setStatus({ status: "failed" }))
 }
